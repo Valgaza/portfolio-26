@@ -1,10 +1,14 @@
+import Hero from "@/components/sections/Hero";
+
 // Single-page portfolio. Each section becomes its own component under
 // src/components/sections as we build it out (steps 2–6).
 export default function Home() {
   return (
     <main className="flex flex-col">
+      <Hero />
+
+      {/* Placeholders — filled in over the next steps. */}
       {[
-        ["hero", "Hero"],
         ["about", "About"],
         ["skills", "Skills"],
         ["projects", "Projects"],

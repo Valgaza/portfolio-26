@@ -17,10 +17,25 @@
   --font-mono: var(--font-geist-mono);
 }
 
-html {
-  /* We drive scrolling with Lenis (added in step 2); keep the native
-     fallback smooth so nothing feels broken before JS hydrates. */
-  scroll-behavior: smooth;
+/* Lenis recommended base styles. Lenis adds `.lenis` to <html> at runtime;
+   we must NOT set `scroll-behavior: smooth` ourselves — that fights Lenis's
+   own interpolation. Elements that should scroll natively inside a Lenis
+   page (e.g. the chat message list) get `data-lenis-prevent`. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
