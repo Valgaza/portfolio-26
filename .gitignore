@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.motiscope
 /.pnp
 .pnp.*
 .yarn/*
@@ -42,3 +43,9 @@ next-env.d.ts
 
 # study-only reference clone (not part of our build)
 /reference
+
+# motiscope screen recordings (large binaries — keep out of git)
+/animations
+
+# motiscope analysis output (curated frames + reports)
+/.motiscope
