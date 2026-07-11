@@ -1,6 +1,7 @@
-import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Projects from "@/components/sections/Projects";
+import Showcase from "@/components/sections/Showcase";
+import Skills from "@/components/sections/Skills";
+import Contact from "@/components/sections/Contact";
+import Footer from "@/components/sections/Footer";
 
 // Placeholder for sections not built yet. Removed as each real section lands.
 function Placeholder({ id, label }: { id: string; label: string }) {
@@ -14,17 +15,16 @@ function Placeholder({ id, label }: { id: string; label: string }) {
   );
 }
 
-// Single-page portfolio. Final order: Hero, About, Skills, Projects, AI Chat,
-// Contact. Skills (step 5) still shows as a placeholder for now.
+// Single-page portfolio. Order: Hero, About, Skills, Projects, AI Chat,
+// Contact, Footer. AI Chat (a later step) is still a placeholder.
 export default function Home() {
   return (
     <main className="flex flex-col">
-      <Hero />
-      <About />
-      <Placeholder id="skills" label="Skills" />
-      <Projects />
+      <Showcase />
+      <Skills />
       <Placeholder id="chat" label="AI Chat" />
-      <Placeholder id="contact" label="Contact" />
+      <Contact />
+      <Footer />
     </main>
   );
 }
