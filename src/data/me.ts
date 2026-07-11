@@ -16,9 +16,11 @@ export type SkillGroup = {
 export type Project = {
   slug: string;
   title: string;
-  tagline: string; // one-line pitch
+  tagline: string; // one-line pitch (used by the compact ProjectCard / AI chat)
+  category: string; // shown as the section label, e.g. "Ecommerce Website"
   description: string; // 2–3 sentences
   tech: string[];
+  status?: "live" | "in-progress"; // controls the CTA (Visit Site vs In Progress)
   links: { label: string; href: string }[]; // live demo, GitHub, etc.
 };
 
@@ -42,15 +44,17 @@ export type Me = {
   email: string;
 };
 
-// ⚠️ MOCK DATA — replace with your real details.
+// ⚠️ DESIGN-TO-CODE STUDY — content mirrors the Roshan Sahu portfolio we're
+// faithfully rebuilding (credited in the footer). Swap for your own details to
+// make it yours.
 export const me: Me = {
-  name: "Alex Doe",
-  role: "Engineering student & creative web developer",
+  name: "Roshan Sahu",
+  role: "web developer and engineer",
   degree: "B.Tech in Computer Science",
   college: "Example Institute of Technology",
   gradYear: "2027",
-  location: "Bengaluru, India",
-  bio: "I'm an engineering student who likes building things that feel alive on the web — smooth motion, playful physics, and interfaces that respond to you. I care about the small details that make software feel handcrafted.",
+  location: "India",
+  bio: "I blend design, strategy, and engineering to create seamless digital experiences. With over six years of experience including time at Bosch, I've built stable, intelligent products for the medical and industrial sectors. Today, I bring that expertise to startups and agencies as a creative developer.",
   skills: [
     {
       category: "Languages",
@@ -67,39 +71,48 @@ export const me: Me = {
   ],
   projects: [
     {
-      slug: "motion-lab",
-      title: "Motion Lab",
-      tagline: "A playground for scroll-driven web animations.",
+      slug: "modevelle",
+      title: "Modevelle",
+      tagline: "A women's fashion storefront.",
+      category: "Ecommerce Website",
       description:
-        "An interactive gallery of GSAP + Lenis experiments — scroll reveals, pinned sections, and physics toys. Built to teach myself production-grade motion techniques.",
-      tech: ["Next.js", "GSAP", "Lenis", "TypeScript"],
-      links: [
-        { label: "Live", href: "https://example.com/motion-lab" },
-        { label: "GitHub", href: "https://github.com/example/motion-lab" },
-      ],
+        "A demo e-commerce website for women's fashion, featuring product listings, cart functionality, and user authentication. Built using Next.js and the Shopify Storefront API.",
+      tech: ["Next.js", "Shopify Storefront API", "GSAP"],
+      status: "live",
+      links: [{ label: "Visit Site", href: "#" }],
     },
     {
-      slug: "study-buddy",
-      title: "StudyBuddy",
-      tagline: "AI flashcards that adapt to how you learn.",
+      slug: "the-shear-room",
+      title: "The Shear Room",
+      tagline: "End-to-end salon booking.",
+      category: "Booking Website",
       description:
-        "A spaced-repetition study app that generates flashcards from your notes and tunes review intervals to your recall. Full-stack with a streaming AI backend.",
-      tech: ["React", "Node.js", "PostgreSQL", "Vercel AI SDK"],
-      links: [
-        { label: "Live", href: "https://example.com/study-buddy" },
-        { label: "GitHub", href: "https://github.com/example/study-buddy" },
-      ],
+        "A demo booking website for a unisex salon brand, including service and pricing displays, an end-to-end booking workflow, and user authentication. Built with Next.js and Supabase.",
+      tech: ["Next.js", "Supabase", "GSAP"],
+      status: "live",
+      links: [{ label: "Visit Site", href: "#" }],
     },
     {
-      slug: "campus-maps",
-      title: "Campus Maps",
-      tagline: "Real-time indoor navigation for my college.",
+      slug: "photographer",
+      title: "Photographer",
+      tagline: "A minimal photography portfolio.",
+      category: "Portfolio Website",
       description:
-        "A wayfinding PWA that routes students between rooms across buildings using a hand-built graph and A* pathfinding, with offline support.",
-      tech: ["React", "TypeScript", "Leaflet", "IndexedDB"],
-      links: [
-        { label: "GitHub", href: "https://github.com/example/campus-maps" },
-      ],
+        "A demo portfolio website for a professional photographer, Jayesh Malhotra, designed to showcase visual work through a minimal, elegant layout. Developed using the no-code platform Webflow.",
+      tech: ["Webflow", "No-Code", "GSAP"],
+      status: "live",
+      links: [{ label: "Visit Site", href: "#" }],
+    },
+    {
+      slug: "katalog",
+      title: "Katalog",
+      tagline: "Furniture, lighting & hardware store.",
+      category: "Ecommerce Website",
+      description:
+        "An e-commerce website for furniture, lighting, and hardware, currently in development. Being built as a custom Shopify theme using Liquid.",
+      tech: ["Shopify", "Liquid", "GSAP"],
+      status: "in-progress",
+      links: [],
     },
   ],
   funFacts: [
@@ -111,5 +124,5 @@ export const me: Me = {
     { label: "GitHub", href: "https://github.com/example" },
     { label: "LinkedIn", href: "https://linkedin.com/in/example" },
   ],
-  email: "alex.doe@example.com",
+  email: "hello.roshansahu@gmail.com",
 };
