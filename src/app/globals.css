@@ -52,9 +52,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hero wordmark echo — a hard, offset yellow shadow behind the white letters.
-   During the intro the letters start yellow (shadow hidden), then settle to
-   white, revealing this offset accent copy. */
+/* Hero wordmark ("structured ambition"). At rest it's plain white — no accent.
+   On hover the hard offset yellow shadow pops out from behind the white letters
+   (a 3D-ish accent copy sliding out), while the fill stays white. The intro
+   colour tween (yellow → white) only touches `color`, so this text-shadow is
+   free to animate independently. */
 .headline-echo {
-  text-shadow: 0.055em 0.06em 0 var(--accent);
+  text-shadow: 0 0 0 transparent;
+  transition: text-shadow 0.3s ease;
+}
+.headline-echo:hover {
+  text-shadow: 0.06em 0.07em 0 var(--accent);
 }
