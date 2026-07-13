@@ -1,0 +1,10 @@
+{
+  "slug": "katalog",
+  "title": "Katalog",
+  "tagline": "Furniture, lighting & hardware store.",
+  "category": "Ecommerce Website",
+  "description": "An e-commerce website for furniture, lighting, and hardware, currently in development. Being built as a custom Shopify theme using Liquid.",
+  "tech": ["Shopify", "Liquid", "GSAP"],
+  "status": "in-progress",
+  "links": []
+}

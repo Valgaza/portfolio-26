@@ -22,11 +22,21 @@ export type Project = {
   tech: string[];
   status?: "live" | "in-progress"; // controls the CTA (Visit Site vs In Progress)
   links: { label: string; href: string }[]; // live demo, GitHub, etc.
+  image?: string; // e.g. "/projects/modevelle.jpg" (a file in /public/projects)
 };
 
 export type SocialLink = {
   label: string; // "GitHub", "LinkedIn", "Email"
   href: string;
+};
+
+export type Experience = {
+  period: string; // "2023 — 2027", "Summer 2025"
+  org: string; // company or institution (shown large, as the "specimen")
+  title: string; // role or degree
+  description: string; // 1–2 sentences
+  kind: "work" | "education"; // labels the card ("Experience" / "Education")
+  location?: string;
 };
 
 export type Me = {
@@ -38,6 +48,7 @@ export type Me = {
   location: string;
   bio: string; // a short paragraph in your own voice
   skills: SkillGroup[];
+  experiences: Experience[]; // ordered left-to-right on the Experience timeline
   projects: Project[];
   funFacts: string[];
   socials: SocialLink[];
@@ -58,15 +69,72 @@ export const me: Me = {
   skills: [
     {
       category: "Languages",
-      items: ["TypeScript", "JavaScript", "Python", "C++", "SQL"],
+      items: ["TypeScript", "JavaScript", "HTML", "CSS"],
     },
     {
-      category: "Frameworks",
-      items: ["React", "Next.js", "Node.js", "Tailwind", "GSAP"],
+      category: "Frameworks & Libraries",
+      items: [
+        "React",
+        "Next.js",
+        "Node.js",
+        "Express",
+        "shadcn/ui",
+        "Tailwind CSS",
+        "Material UI",
+      ],
     },
     {
-      category: "Tools",
-      items: ["Git", "Figma", "Vercel", "Docker", "Postman"],
+      category: "Databases & ORMs",
+      items: ["MySQL", "Prisma", "Firebase (Firestore)", "MongoDB"],
+    },
+    {
+      category: "Tools & Platforms",
+      items: ["Git", "GitHub", "Vercel", "n8n", "Framer", "Figma", "Canva"],
+    },
+    {
+      category: "Authentication",
+      items: ["Firebase Auth", "NextAuth (Google OAuth)"],
+    },
+    {
+      category: "Other",
+      items: [
+        "REST APIs",
+        "Responsive Design",
+        "UI/UX",
+        "Automation Workflows",
+      ],
+    },
+  ],
+  // ⚠️ PLACEHOLDER — swap in your real education + internships. Order them
+  // chronologically (they render left-to-right along the timeline). Add or
+  // remove entries freely; the section adapts to any count.
+  experiences: [
+    {
+      period: "2023 — 2027",
+      org: "Example Institute of Technology",
+      title: "B.Tech, Computer Science",
+      description:
+        "Coursework across data structures, systems, and web engineering, alongside self-directed work building production-grade interfaces.",
+      kind: "education",
+      location: "India",
+    },
+    {
+      period: "Summer 2025",
+      org: "Bosch",
+      title: "Software Engineering Intern",
+      description:
+        "Built and shipped stable, intelligent tooling for industrial products — from data pipelines to the interfaces on top of them.",
+      kind: "work",
+      location: "Remote",
+    },
+    {
+      period: "2025 — Present",
+      org: "Freelance",
+      title: "Creative Developer",
+      description:
+        "Partnering with startups and agencies to design and build seamless, animation-rich web experiences end to end.",
+      kind: "work",
+      location: "Remote",
     },
   ],
   projects: [

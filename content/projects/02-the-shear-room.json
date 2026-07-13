@@ -1,0 +1,10 @@
+{
+  "slug": "the-shear-room",
+  "title": "The Shear Room",
+  "tagline": "End-to-end salon booking.",
+  "category": "Booking Website",
+  "description": "A demo booking website for a unisex salon brand, including service and pricing displays, an end-to-end booking workflow, and user authentication. Built with Next.js and Supabase.",
+  "tech": ["Next.js", "Supabase", "GSAP"],
+  "status": "live",
+  "links": [{ "label": "Visit Site", "href": "#" }]
+}

@@ -30,9 +30,9 @@ export default function Contact() {
       <div className="reveal-fade mt-14">
         <a
           href={`mailto:${me.email}`}
-          className="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground"
+          className="group inline-flex items-center gap-3 font-mono text-sm uppercase tracking-[0.2em] text-foreground transition-colors hover:text-accent"
         >
-          <span aria-hidden className="text-muted">
+          <span aria-hidden className="text-muted transition-colors group-hover:text-accent">
             (
           </span>
           Let&apos;s work together
@@ -42,7 +42,7 @@ export default function Contact() {
           >
             ↗
           </span>
-          <span aria-hidden className="text-muted">
+          <span aria-hidden className="text-muted transition-colors group-hover:text-accent">
             )
           </span>
         </a>

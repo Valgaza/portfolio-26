@@ -3,10 +3,13 @@
 :root {
   /* Faithful study of the Roshan Sahu portfolio — near-black canvas, warm
      off-white ink, and a single acid-yellow accent used on the hero words. */
-  --background: #0d0d0f;
+  --background: #181716;
   --foreground: #f4f4ef;
   --muted: #8a8a8a;
-  --accent: #e9e400;
+  /* Neon lime/chartreuse accent — used on the hero words, the progress ring,
+     the skills labels, and every hover state. Change this ONE value to retune
+     the accent everywhere. */
+  --accent: #d4ff00;
   /* The one light section (Services) inverts to these. */
   --surface-light: #f5f5f2;
   --on-surface-light: #101014;
@@ -63,4 +66,13 @@ body {
 }
 .headline-echo:hover {
   text-shadow: 0.06em 0.07em 0 var(--accent);
+}
+
+/* Experience timeline: when motion is off (or JS hasn't run), the progress rail
+   should just be filled rather than sitting empty. `!important` beats the inline
+   `width: 0` we start it at for the scroll-fill animation. */
+@media (prefers-reduced-motion: reduce) {
+  .exp-fill {
+    width: 100% !important;
+  }
 }

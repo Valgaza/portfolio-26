@@ -1,0 +1,10 @@
+{
+  "slug": "modevelle",
+  "title": "Modevelle",
+  "tagline": "A women's fashion storefront.",
+  "category": "Ecommerce Website",
+  "description": "A demo e-commerce website for women's fashion, featuring product listings, cart functionality, and user authentication. Built using Next.js and the Shopify Storefront API.",
+  "tech": ["Next.js", "Shopify Storefront API", "GSAP"],
+  "status": "live",
+  "links": [{ "label": "Visit Site", "href": "#" }]
+}

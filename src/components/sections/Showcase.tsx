@@ -16,7 +16,6 @@ const NAV_LINKS = [
 ];
 
 const bioWords = me.bio.split(" ");
-const total = String(me.projects.length).padStart(2, "0");
 
 // Scroll "budget" (abstract timeline units) per phase for the pinned scroll.
 const UNIT_PHOTO = 1;
@@ -28,7 +27,8 @@ const FRAME_MARGIN = 12; // px — matches `inset-3` on the cards
 const PREV_CARD_SCALE = 0.92; // how much a covered card recedes
 
 // Intro (load) palette — GSAP can't tween CSS vars, so use the raw hexes.
-const YELLOW = "#e9e400";
+// Keep NEON in sync with `--accent` in globals.css (GSAP tweens the raw value).
+const YELLOW = "#d4ff00";
 const WHITE = "#f4f4ef";
 
 /** A nav link whose text scrambles/decodes in, on a per-link delay. On hover a
@@ -47,7 +47,7 @@ function NavLink({
   return (
     <a
       href={href}
-      className="group relative inline-flex items-center font-mono text-[0.78rem] uppercase tracking-[0.2em] text-muted transition-colors hover:text-foreground"
+      className="group relative inline-flex items-center font-mono text-[0.84rem] uppercase tracking-[0.2em] text-muted transition-colors hover:text-accent"
     >
       <span
         aria-hidden
@@ -79,16 +79,16 @@ function MenuToggle() {
         {[0, 1, 2, 3].map((i) => (
           <span
             key={i}
-            className="h-5 w-[2px] bg-foreground transition-all duration-300 group-hover:h-6"
+            className="h-5 w-[2px] bg-foreground transition-all duration-300 group-hover:h-6 group-hover:bg-accent"
           />
         ))}
       </button>
-      <ul className="pointer-events-none flex -translate-y-1 flex-col items-end gap-2 pr-2 pt-3 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+      <ul className="pointer-events-none flex -translate-y-1 flex-col items-end gap-4 pr-2 pt-5 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
         {NAV_LINKS.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
-              className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-muted transition-colors hover:text-foreground"
+              className="font-mono text-sm uppercase tracking-[0.22em] text-foreground/90 transition-colors hover:text-accent"
             >
               {link.label}
             </a>
@@ -110,15 +110,17 @@ function VisitLink({ href }: { href: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-foreground"
+      className="group inline-flex items-center gap-2 font-mono text-[0.95rem] uppercase tracking-[0.2em] text-foreground transition-colors hover:text-accent"
     >
       <span
         aria-hidden
-        className="inline-block text-muted transition-transform duration-300 ease-out group-hover:-translate-x-2"
+        className="inline-block text-muted transition-all duration-300 ease-out group-hover:-translate-x-2 group-hover:text-accent"
       >
         (
       </span>
-      <span className="relative -top-[2px] px-1">Visit Site</span>
+      <span className="relative -top-[2px] px-1 transition-colors group-hover:text-accent">
+        Visit Site
+      </span>
       <span
         aria-hidden
         className="relative inline-flex h-[1em] w-[1em] items-center justify-center overflow-hidden"
@@ -132,7 +134,7 @@ function VisitLink({ href }: { href: string }) {
       </span>
       <span
         aria-hidden
-        className="inline-block text-muted transition-transform duration-300 ease-out group-hover:translate-x-2"
+        className="inline-block text-muted transition-all duration-300 ease-out group-hover:translate-x-2 group-hover:text-accent"
       >
         )
       </span>
@@ -148,20 +150,28 @@ function VisitLink({ href }: { href: string }) {
  */
 function PanelContent({ project }: { project: Project }) {
   return (
+    // ─── PROJECT CARD LAYOUT — the knobs you'll want to tune live right here ───
+    // • Outer padding of the whole card ....... px-8 py-12 (sm:px-14 sm:py-16 / lg:px-20)
+    // • Gap between the two columns ........... lg:gap-12
+    // • LEFT text block height off bottom ..... lg:pb-[16vh]  (bigger = higher)
+    // • Gap between title/desc/visit .......... gap-6 (on the LEFT column)
+    // • Category divider length ............... w-[60%] on `.sc-divider` (top one)
+    // • Tech divider length ................... w-[45%] on `.sc-divider` (bottom one)
+    // • Preview size .......................... aspect-[16/10] w-full (RIGHT column)
     <div className="flex h-full w-full flex-col gap-10 px-8 py-12 sm:px-14 sm:py-16 lg:grid lg:grid-cols-2 lg:gap-12 lg:px-20">
       {/* LEFT column — title / description / visit, as one independent block.
-          `pb-[TEXT_BLOCK_LIFT]` is the single knob for how high the block sits
-          off the bottom; changing it does NOT move the preview (separate col). */}
+          `lg:pb-[16vh]` is the single knob for how high the block sits off the
+          bottom; changing it does NOT move the preview (separate column). */}
       <div className="order-2 flex flex-col justify-end gap-6 lg:order-1 lg:pb-[16vh]">
         <h3 className="sc-reveal font-display text-5xl uppercase leading-[0.9] tracking-tight sm:text-6xl lg:text-7xl">
           {project.title}
         </h3>
-        <p className="sc-reveal max-w-md text-sm leading-relaxed text-muted sm:text-base">
+        <p className="sc-reveal max-w-md text-base leading-relaxed text-muted sm:text-lg">
           {project.description}
         </p>
         <div className="sc-reveal">
           {project.status === "in-progress" ? (
-            <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <span className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-muted">
               <span aria-hidden>(</span>
               <span className="px-1">In Progress</span>
               <span aria-hidden>)</span>
@@ -176,21 +186,35 @@ function PanelContent({ project }: { project: Project }) {
           Independent of the left column, so the picture stays put. */}
       <div className="order-1 flex flex-col justify-between gap-8 lg:order-2">
         <div className="sc-reveal">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-foreground sm:text-sm">
+          <p className="font-mono text-sm uppercase tracking-[0.25em] text-foreground sm:text-[0.95rem]">
             {project.category}
           </p>
-          <div className="my-4 h-px w-full bg-white/15" />
-          <p className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-muted">
+          {/* Divider ABOVE the tech list — tweak length via the `w-[..]` here. */}
+          <div className="sc-divider my-4 h-px w-[60%] bg-white/15" />
+          <p className="font-mono text-[0.78rem] uppercase tracking-[0.15em] text-muted">
             {project.tech.join("   •   ")}
           </p>
+          {/* Divider BELOW the tech list — its own independent length. */}
+          <div className="sc-divider mt-4 h-px w-[45%] bg-white/15" />
         </div>
         <div className="sc-reveal relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01]">
-          <span className="absolute font-display text-5xl uppercase text-white/[0.04] sm:text-7xl">
-            {project.title}
-          </span>
-          <span className="relative font-mono text-[0.6rem] uppercase tracking-[0.25em] text-muted">
-            {project.title} preview
-          </span>
+          {project.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={project.image}
+              alt={`${project.title} preview`}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <>
+              <span className="absolute font-display text-5xl uppercase text-white/[0.04] sm:text-7xl">
+                {project.title}
+              </span>
+              <span className="relative font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted">
+                {project.title} preview
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -207,9 +231,11 @@ function PanelContent({ project }: { project: Project }) {
  */
 function CounterBadge({
   index,
+  total,
   progress,
 }: {
   index: number;
+  total: string;
   progress?: number;
 }) {
   return (
@@ -270,12 +296,13 @@ function CounterBadge({
  *    bio stream → stacking cards, and is rebuilt on resize to re-measure the
  *    slot/frame geometry.
  */
-export default function Showcase() {
+export default function Showcase({ projects }: { projects: Project[] }) {
   const root = useRef<HTMLElement>(null);
   const pin = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [reduced, setReduced] = useState(false);
   const [rev, setRev] = useState(0);
+  const total = String(projects.length).padStart(2, "0");
 
   const helloText = `I'm ${me.name}, a ${me.role}. Welcome to my portfolio!`;
   const scrambleRef = useScramble<HTMLParagraphElement>(helloText, {
@@ -375,7 +402,7 @@ export default function Showcase() {
       return;
     }
 
-    const n = me.projects.length;
+    const n = projects.length;
     const timelineTotal = UNIT_PHOTO + UNIT_BIO + n * UNIT_CARD;
 
     const ctx = gsap.context(() => {
@@ -517,7 +544,7 @@ export default function Showcase() {
             {me.bio}
           </p>
         </div>
-        {me.projects.map((project, i) => (
+        {projects.map((project, i) => (
           <div
             key={project.slug}
             className="relative flex min-h-screen items-center"
@@ -525,7 +552,8 @@ export default function Showcase() {
             <div className="pointer-events-none absolute left-6 top-8 sm:left-12 lg:left-20">
               <CounterBadge
                 index={i}
-                progress={((i + 1) / me.projects.length) * 100}
+                total={total}
+                progress={((i + 1) / projects.length) * 100}
               />
             </div>
             <PanelContent project={project} />
@@ -606,12 +634,12 @@ export default function Showcase() {
               (
             </span>
             <div className="sc-hero-fade max-w-sm text-center">
-              <p className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-foreground">
+              <p className="mb-4 font-mono text-[0.95rem] uppercase tracking-[0.3em] text-foreground">
                 Hello!
               </p>
               <p
                 ref={scrambleRef}
-                className="font-sans text-xl leading-relaxed text-muted"
+                className="font-sans text-[1.35rem] leading-relaxed text-muted"
               >
                 {helloText}
               </p>
@@ -625,7 +653,7 @@ export default function Showcase() {
           </div>
 
           <div className="mt-auto flex items-center justify-between gap-4 px-6 pb-14 sm:px-12 lg:px-20">
-            <span className="block overflow-hidden">
+            <span className="block overflow-hidden pb-[1.6vw] pr-[0.8vw]">
               <span className="sc-word headline-echo pointer-events-auto block cursor-default font-display text-[9.5vw] leading-[0.85] lowercase tracking-tight">
                 structured
               </span>
@@ -633,7 +661,7 @@ export default function Showcase() {
             {/* Little photo before it scrolls open — TWEAK its start size here
                 (this slot's measured box is the photo's opening geometry). */}
             <div className="sc-photo-slot h-[27vh] w-[17vw] shrink-0" aria-hidden />
-            <span className="block overflow-hidden">
+            <span className="block overflow-hidden pb-[1.6vw] pr-[0.8vw]">
               <span className="sc-word headline-echo pointer-events-auto block cursor-default font-display text-[9.5vw] leading-[0.85] lowercase tracking-tight">
                 ambition
               </span>
@@ -646,7 +674,7 @@ export default function Showcase() {
 
         {/* Bio — streams in over the framed photo. */}
         <div className="sc-bio pointer-events-none absolute inset-3 z-30 flex items-center px-[8%]">
-          <p className="max-w-3xl text-2xl font-medium leading-[1.35] tracking-tight sm:text-3xl lg:text-4xl">
+          <p className="max-w-3xl text-[1.65rem] font-medium leading-[1.35] tracking-tight sm:text-[2rem] lg:text-[2.4rem]">
             {bioWords.map((word, i) => (
               <span key={i} className="sc-bio-word">
                 {word}{" "}
@@ -657,11 +685,11 @@ export default function Showcase() {
 
         {/* Counter — appears for the projects phase. */}
         <div className="sc-counter pointer-events-none absolute left-8 top-18 z-[100] sm:left-12 lg:left-20">
-          <CounterBadge index={active} />
+          <CounterBadge index={active} total={total} />
         </div>
 
         {/* Project cards — slide up and stack within the same frame. */}
-        {me.projects.map((project, i) => (
+        {projects.map((project, i) => (
           <div
             key={project.slug}
             className="project-card absolute inset-3 overflow-hidden rounded-[2rem] border border-white/10 bg-background will-change-transform"

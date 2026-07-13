@@ -27,7 +27,7 @@ function useISTClock() {
 }
 
 const LINK_CLASS =
-  "font-mono text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground";
+  "font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted transition-colors hover:text-accent";
 
 export default function Footer() {
   const time = useISTClock();
@@ -53,7 +53,7 @@ export default function Footer() {
 
         {/* Utilities */}
         <div className="flex flex-col gap-3">
-          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
+          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted">
             IST — {time ?? "--:--:--"}
           </span>
           <a href="#hero" className={LINK_CLASS}>
@@ -64,7 +64,7 @@ export default function Footer() {
         {/* Attribution — this is a design-to-code STUDY of someone else's work,
             so the original designer is credited here, prominently. */}
         <div className="flex flex-col gap-3 sm:text-right">
-          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
+          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted">
             Design by Roshan Sahu &amp; Rekhchand
           </span>
           <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted/70">
