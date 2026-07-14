@@ -49,3 +49,6 @@ next-env.d.ts
 
 # motiscope analysis output (curated frames + reports)
 /.motiscope
+
+# Personal CV — do not publish
+AaryaPatil_CV.pdf
