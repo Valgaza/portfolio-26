@@ -1,0 +1,10 @@
+{
+  "slug": "hiring-suite",
+  "title": "Hiring Suite",
+  "tagline": "An AI-powered hiring workflow.",
+  "category": "AI / Automation",
+  "description": "An AI hiring workflow that automates resume ingestion and job-fit scoring with Transformers + Gemini — cutting recruiter workload ~70% — and adds soft-skill verification through CV-based emotion recognition.",
+  "tech": ["Transformers", "Gemini", "Computer Vision"],
+  "status": "live",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza" }]
+}

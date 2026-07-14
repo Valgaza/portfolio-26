@@ -1,0 +1,10 @@
+{
+  "slug": "indexial",
+  "title": "Indexial",
+  "tagline": "Hybrid SQL + RAG query engine.",
+  "category": "RAG / Search",
+  "description": "A document-QA engine that routes queries across SQL, RAG, and hybrid paths via intent classification, with cross-document semantic search using Jina AI embeddings + pgvector and session-based memory backed by a persistent table registry.",
+  "tech": ["Python", "pgvector", "Jina AI"],
+  "status": "live",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza" }]
+}

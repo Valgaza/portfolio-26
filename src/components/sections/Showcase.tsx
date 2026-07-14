@@ -12,7 +12,7 @@ import { LaunchArrow } from "@/components/ui/LaunchArrow";
 const NAV_LINKS = [
   { label: "Projects", href: "#showcase" },
   { label: "About Me", href: "#showcase" },
-  { label: "Services", href: "#skills" },
+  { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -678,7 +678,7 @@ export default function Showcase({ projects }: { projects: Project[] }) {
             className="font-mono text-lg font-semibold tracking-tight"
             aria-label={`${me.name} — home`}
           >
-            RS
+            AP
           </a>
           <nav className="flex items-center gap-6 sm:gap-10">
             {NAV_LINKS.map((link, i) => (

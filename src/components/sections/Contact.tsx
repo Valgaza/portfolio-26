@@ -23,8 +23,8 @@ export default function Contact() {
       <h2 className="max-w-3xl text-3xl font-medium leading-[1.3] tracking-tight sm:text-4xl lg:text-5xl">
         <MaskLine>Let&apos;s build and ship something remarkable.</MaskLine>
         <MaskLine>
-          Open to agency collaborations, freelance work, and fully remote
-          full-time opportunities.
+          Open to AI/ML internships, research collaborations, and full-time
+          roles.
         </MaskLine>
       </h2>
 

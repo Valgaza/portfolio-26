@@ -55,142 +55,149 @@ export type Me = {
   email: string;
 };
 
-// ⚠️ DESIGN-TO-CODE STUDY — content mirrors the Roshan Sahu portfolio we're
-// faithfully rebuilding (credited in the footer). Swap for your own details to
-// make it yours.
+// Real content for Aarya Patil (sourced from AaryaPatil_CV.pdf). NOTE: the visual
+// DESIGN is still a study of the Roshan Sahu portfolio — that attribution stays
+// in the footer; only the CONTENT below is personalised.
 export const me: Me = {
-  name: "Roshan Sahu",
-  role: "web developer and engineer",
-  degree: "B.Tech in Computer Science",
-  college: "Example Institute of Technology",
+  name: "Aarya Patil",
+  role: "computer engineering student and AI/ML developer",
+  degree: "B.Tech in Computer Engineering",
+  college: "K. J. Somaiya College of Engineering",
   gradYear: "2027",
-  location: "India",
-  bio: "I blend design, strategy, and engineering to create seamless digital experiences. With over six years of experience including time at Bosch, I've built stable, intelligent products for the medical and industrial sectors. Today, I bring that expertise to startups and agencies as a creative developer.",
+  location: "Mumbai, India",
+  bio: "I build AI systems that make it to production — retrieval-augmented platforms, computer-vision pipelines, and NLP tooling. Through internships at PwC, Amnex, and Fostride, I've turned research-grade models into software people actually use, and I care as much about the engineering around a model as the model itself.",
   skills: [
     {
       category: "Languages",
-      items: ["TypeScript", "JavaScript", "HTML", "CSS"],
+      items: ["Python", "C++", "Java", "SQL", "JavaScript"],
     },
     {
-      category: "Frameworks & Libraries",
+      category: "ML / AI",
+      items: ["RAG", "Transformers", "NLP", "Tool-Calling Agents", "TFT"],
+    },
+    {
+      category: "Computer Vision",
+      items: ["YOLOv8", "DINOv2", "OpenCV", "Pytesseract"],
+    },
+    {
+      category: "LLMs & Serving",
+      items: ["Llama", "Mistral", "Gemma", "vLLM", "Hugging Face"],
+    },
+    {
+      category: "Frameworks & Tools",
       items: [
-        "React",
+        "PyTorch",
+        "TensorFlow",
+        "FastAPI",
+        "Flask",
         "Next.js",
-        "Node.js",
-        "Express",
-        "shadcn/ui",
-        "Tailwind CSS",
-        "Material UI",
+        "React",
+        "Git",
+        "Docker",
       ],
     },
     {
-      category: "Databases & ORMs",
-      items: ["MySQL", "Prisma", "Firebase (Firestore)", "MongoDB"],
-    },
-    {
-      category: "Tools & Platforms",
-      items: ["Git", "GitHub", "Vercel", "n8n", "Framer", "Figma", "Canva"],
-    },
-    {
-      category: "Authentication",
-      items: ["Firebase Auth", "NextAuth (Google OAuth)"],
-    },
-    {
-      category: "Other",
+      category: "Databases & Infra",
       items: [
-        "REST APIs",
-        "Responsive Design",
-        "UI/UX",
-        "Automation Workflows",
+        "PostgreSQL",
+        "Supabase (pgvector)",
+        "AlloyDB",
+        "Vector DBs",
+        "Redis",
       ],
     },
   ],
-  // ⚠️ PLACEHOLDER — swap in your real education + internships. Order them
-  // chronologically (they render left-to-right along the timeline). Add or
-  // remove entries freely; the section adapts to any count.
+  // Ordered chronologically (they render left-to-right along the timeline).
   experiences: [
     {
       period: "2023 — 2027",
-      org: "Example Institute of Technology",
-      title: "B.Tech, Computer Science",
+      org: "K. J. Somaiya",
+      title: "B.Tech, Computer Engineering",
       description:
-        "Coursework across data structures, systems, and web engineering, alongside self-directed work building production-grade interfaces.",
+        "Computer engineering with a 9.32 GPA — coursework across systems, machine learning, and web engineering alongside hands-on project and research work.",
       kind: "education",
+      location: "Mumbai, India",
+    },
+    {
+      period: "Feb 2024 — Oct 2024",
+      org: "Orion Racing",
+      title: "Data Acquisition Engineer",
+      description:
+        "Built telemetry pipelines streaming 25+ CAN sensors to real-time dashboards at sub-200ms latency, plus anomaly detection for 5× faster post-race diagnostics.",
+      kind: "work",
+      location: "KJSCE Formula Student",
+    },
+    {
+      period: "May 2025 — Aug 2025",
+      org: "PwC India",
+      title: "AI/ML Intern",
+      description:
+        "Shipped a YOLOv8 + OCR pipeline digitising degraded legacy land records, and an NLP system automating multi-department report analysis (2 days → 30 min).",
+      kind: "work",
       location: "India",
     },
     {
-      period: "Summer 2025",
-      org: "Bosch",
-      title: "Software Engineering Intern",
+      period: "Mar 2026 — Apr 2026",
+      org: "Fostride",
+      title: "Computer Vision Intern",
       description:
-        "Built and shipped stable, intelligent tooling for industrial products — from data pipelines to the interfaces on top of them.",
+        "Engineered a YOLO + DINOv2 waste-classification pipeline for a robotic sorter, plus an end-to-end autolabelling flow targeting Jetson Nano deployment.",
       kind: "work",
-      location: "Remote",
+      location: "India",
     },
     {
-      period: "2025 — Present",
-      org: "Freelance",
-      title: "Creative Developer",
+      period: "Jun 2026 — Aug 2026",
+      org: "Amnex",
+      title: "AI/ML Intern",
       description:
-        "Partnering with startups and agencies to design and build seamless, animation-rich web experiences end to end.",
+        "Architected AIRA, a self-hosted enterprise RAG platform over AlloyDB + pgvector with a secured 13-tool agent orchestrator, validated across 187 automated tests.",
       kind: "work",
-      location: "Remote",
+      location: "India",
     },
   ],
   projects: [
     {
-      slug: "modevelle",
-      title: "Modevelle",
-      tagline: "A women's fashion storefront.",
-      category: "Ecommerce Website",
+      slug: "trafficos",
+      title: "TrafficOS",
+      tagline: "Forecasting and untangling traffic.",
+      category: "ML System",
       description:
-        "A demo e-commerce website for women's fashion, featuring product listings, cart functionality, and user authentication. Built using Next.js and the Shopify Storefront API.",
-      tech: ["Next.js", "Shopify Storefront API", "GSAP"],
+        "A traffic-congestion forecasting system built on a Temporal Fusion Transformer with grid-based heatmap visualization, plus game-theoretic route optimization that redistributes traffic to relieve gridlock at its source.",
+      tech: ["Python", "PyTorch", "TFT"],
       status: "live",
-      links: [{ label: "Visit Site", href: "#" }],
+      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
     },
     {
-      slug: "the-shear-room",
-      title: "The Shear Room",
-      tagline: "End-to-end salon booking.",
-      category: "Booking Website",
+      slug: "indexial",
+      title: "Indexial",
+      tagline: "Hybrid SQL + RAG query engine.",
+      category: "RAG / Search",
       description:
-        "A demo booking website for a unisex salon brand, including service and pricing displays, an end-to-end booking workflow, and user authentication. Built with Next.js and Supabase.",
-      tech: ["Next.js", "Supabase", "GSAP"],
+        "A document-QA engine that routes queries across SQL, RAG, and hybrid paths via intent classification, with cross-document semantic search using Jina AI embeddings + pgvector and session-based memory backed by a persistent table registry.",
+      tech: ["Python", "pgvector", "Jina AI"],
       status: "live",
-      links: [{ label: "Visit Site", href: "#" }],
+      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
     },
     {
-      slug: "photographer",
-      title: "Photographer",
-      tagline: "A minimal photography portfolio.",
-      category: "Portfolio Website",
+      slug: "hiring-suite",
+      title: "Hiring Suite",
+      tagline: "An AI-powered hiring workflow.",
+      category: "AI / Automation",
       description:
-        "A demo portfolio website for a professional photographer, Jayesh Malhotra, designed to showcase visual work through a minimal, elegant layout. Developed using the no-code platform Webflow.",
-      tech: ["Webflow", "No-Code", "GSAP"],
+        "An AI hiring workflow that automates resume ingestion and job-fit scoring with Transformers + Gemini — cutting recruiter workload ~70% — and adds soft-skill verification through CV-based emotion recognition.",
+      tech: ["Transformers", "Gemini", "Computer Vision"],
       status: "live",
-      links: [{ label: "Visit Site", href: "#" }],
-    },
-    {
-      slug: "katalog",
-      title: "Katalog",
-      tagline: "Furniture, lighting & hardware store.",
-      category: "Ecommerce Website",
-      description:
-        "An e-commerce website for furniture, lighting, and hardware, currently in development. Being built as a custom Shopify theme using Liquid.",
-      tech: ["Shopify", "Liquid", "GSAP"],
-      status: "in-progress",
-      links: [],
+      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
     },
   ],
   funFacts: [
-    "I once wrote a Python bot that reminds me to drink water — and then ignored it for a month.",
-    "I collect mechanical keyboard switches and can rank them by sound.",
-    "I learned to code because I wanted to mod games.",
+    "I'm rated 1600+ on LeetCode and reached Pupil on Codeforces.",
+    "I completed the DeepLearning.AI Deep Learning Specialization — all four courses.",
+    "I built the telemetry stack for my college's Formula Student racing team, Orion Racing.",
   ],
   socials: [
-    { label: "GitHub", href: "https://github.com/example" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/example" },
+    { label: "GitHub", href: "https://github.com/Valgaza" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/aarya-patil" },
   ],
-  email: "hello.roshansahu@gmail.com",
+  email: "aaryapatil3004@gmail.com",
 };

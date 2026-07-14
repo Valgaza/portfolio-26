@@ -1,0 +1,10 @@
+{
+  "slug": "trafficos",
+  "title": "TrafficOS",
+  "tagline": "Forecasting and untangling traffic.",
+  "category": "ML System",
+  "description": "A traffic-congestion forecasting system built on a Temporal Fusion Transformer with grid-based heatmap visualization, plus game-theoretic route optimization that redistributes traffic to relieve gridlock at its source.",
+  "tech": ["Python", "PyTorch", "TFT"],
+  "status": "live",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza" }]
+}

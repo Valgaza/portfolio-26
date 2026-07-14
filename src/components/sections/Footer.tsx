@@ -32,6 +32,7 @@ const LINK_CLASS =
 export default function Footer() {
   const time = useISTClock();
   const linkedIn = me.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
+  const github = me.socials.find((s) => s.label === "GitHub")?.href ?? "#";
 
   return (
     <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-24 sm:px-12 lg:px-20">
@@ -43,10 +44,20 @@ export default function Footer() {
           <a href={`mailto:${me.email}`} className={LINK_CLASS}>
             {me.email}
           </a>
-          <a href="#" className={LINK_CLASS}>
-            Instagram
+          <a
+            href={github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={LINK_CLASS}
+          >
+            GitHub
           </a>
-          <a href={linkedIn} className={LINK_CLASS}>
+          <a
+            href={linkedIn}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={LINK_CLASS}
+          >
             LinkedIn
           </a>
         </div>
