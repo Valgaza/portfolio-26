@@ -23,6 +23,12 @@ const UNIT_BIO = 2.5;
 const UNIT_CARD = 1.45; // higher = each card takes more scroll (slower)
 const SCROLL_PER_UNIT = 0.7;
 
+// DWELL: each phase finishes ANIMATING within this fraction of its scroll
+// budget; the remainder is a stationary HOLD — the content sits perfectly still
+// while you keep scrolling, before the next phase begins. Lower = longer pause.
+const CARD_ARRIVE = 0.62; // per project card (slide-in + reveal, then rest)
+const PHASE_ARRIVE = 0.6; // for the photo-grow and bio-stream phases
+
 const FRAME_MARGIN = 12; // px — matches `inset-3` on the cards
 const PREV_CARD_SCALE = 0.92; // how much a covered card recedes
 
@@ -466,19 +472,25 @@ export default function Showcase({ projects }: { projects: Project[] }) {
         },
       });
 
-      tl.to(photoEl, { ...endGeo, duration: UNIT_PHOTO }, 0);
+      // Photo fills within PHASE_ARRIVE of its unit, then HOLDS (framed, still)
+      // for the rest before the bio begins.
+      const photoArrive = UNIT_PHOTO * PHASE_ARRIVE;
+      tl.to(photoEl, { ...endGeo, duration: photoArrive }, 0);
       // The hero (card + words + nav) scrolls UP and out over the growing photo
       // — the photo sits in front of it (higher z), so the text slides up behind
       // the expanding image and exits the top just as it fills. It never fades.
       tl.to(
         [".sc-headline", ".sc-nav"],
-        { yPercent: -110, duration: UNIT_PHOTO },
+        { yPercent: -110, duration: photoArrive },
         0,
       );
       // As the top nav clears out, the "||||" menu icon settles in top-right.
-      tl.to(".sc-menu", { autoAlpha: 1, duration: 0.25 }, UNIT_PHOTO * 0.8);
+      tl.to(".sc-menu", { autoAlpha: 1, duration: 0.25 }, photoArrive * 0.9);
 
-      const perWord = UNIT_BIO / bioWords.length;
+      // Bio streams in over PHASE_ARRIVE of its unit (finishing before the first
+      // card), leaving a HOLD on the completed paragraph.
+      const bioSpan = UNIT_BIO * PHASE_ARRIVE;
+      const perWord = bioSpan / bioWords.length;
       tl.to(".sc-bio", { autoAlpha: 1, duration: 0.15 }, UNIT_PHOTO);
       tl.to(
         ".sc-bio-word",
@@ -491,7 +503,11 @@ export default function Showcase({ projects }: { projects: Project[] }) {
       // card height up into its spot — locked to the first card's slide — then
       // persists there while later cards come and go.
       tl.set(".sc-counter", { autoAlpha: 1 }, projectsStart);
-      tl.to(".sc-counter", { y: 0, duration: UNIT_CARD }, projectsStart);
+      tl.to(
+        ".sc-counter",
+        { y: 0, duration: UNIT_CARD * CARD_ARRIVE },
+        projectsStart,
+      );
       // The ring fills smoothly across the whole projects phase — since each
       // card spans one UNIT_CARD, every card advances it exactly one quarter.
       tl.to(
@@ -501,28 +517,32 @@ export default function Showcase({ projects }: { projects: Project[] }) {
       );
       cards.forEach((card, i) => {
         const at = projectsStart + i * UNIT_CARD;
+        // The card slides + reveals within CARD_ARRIVE of its unit; the rest of
+        // the unit (until the next card's `at`) is a stationary HOLD — the
+        // finished card rests before the next one rises.
+        const arrive = UNIT_CARD * CARD_ARRIVE;
         const items = gsap.utils.toArray<HTMLElement>(".sc-reveal", card);
-        tl.to(card, { yPercent: 0, duration: UNIT_CARD }, at);
+        tl.to(card, { yPercent: 0, duration: arrive }, at);
         // Staggered fade-up of the card's text/preview as it slides into place.
         tl.to(
           items,
           {
             autoAlpha: 1,
             y: 0,
-            duration: UNIT_CARD * 0.4,
+            duration: arrive * 0.55,
             ease: "power2.out",
-            stagger: (UNIT_CARD * 0.45) / items.length,
+            stagger: (arrive * 0.5) / items.length,
           },
-          at + UNIT_CARD * 0.25,
+          at + arrive * 0.35,
         );
         if (i > 0) {
           const prev = cards[i - 1];
           tl.to(
             gsap.utils.toArray<HTMLElement>(".sc-reveal", prev),
-            { autoAlpha: 0, duration: UNIT_CARD * 0.4 },
+            { autoAlpha: 0, duration: arrive * 0.5 },
             at,
           );
-          tl.to(prev, { scale: PREV_CARD_SCALE, duration: UNIT_CARD }, at);
+          tl.to(prev, { scale: PREV_CARD_SCALE, duration: arrive }, at);
         }
       });
     }, root);

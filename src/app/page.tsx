@@ -1,6 +1,5 @@
 import Showcase from "@/components/sections/Showcase";
-import Experience from "@/components/sections/Experience";
-import Skills from "@/components/sections/Skills";
+import Journey from "@/components/sections/Journey";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import { getProjects } from "@/lib/projects";
@@ -17,8 +16,9 @@ function Placeholder({ id, label }: { id: string; label: string }) {
   );
 }
 
-// Single-page portfolio. Order: Showcase (hero + about + projects), Experience,
-// Skills, AI Chat, Contact, Footer. AI Chat (a later step) is a placeholder.
+// Single-page portfolio. Order: Showcase (hero + about + projects), Journey
+// (Experience + Skills fused into one pinned chapter), AI Chat, Contact, Footer.
+// AI Chat (a later step) is a placeholder.
 export default function Home() {
   // Projects come from `content/projects/*.json` (folder-driven — add a file to
   // add a card). Loaded here on the server and passed into the client Showcase.
@@ -27,8 +27,7 @@ export default function Home() {
   return (
     <main className="flex flex-col">
       <Showcase projects={projects} />
-      <Experience />
-      <Skills />
+      <Journey />
       <Placeholder id="chat" label="AI Chat" />
       <Contact />
       <Footer />
