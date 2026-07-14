@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { me } from "@/data/me";
 import { MaskLine, useScrollReveal } from "@/lib/animation/reveal";
+import { LaunchArrow } from "@/components/ui/LaunchArrow";
 
 /**
  * Contact — the closing call to action. Reuses the shared masked-line reveal
@@ -32,17 +33,20 @@ export default function Contact() {
           href={`mailto:${me.email}`}
           className="group inline-flex items-center gap-3 font-mono text-sm uppercase tracking-[0.2em] text-foreground transition-colors hover:text-accent"
         >
-          <span aria-hidden className="text-muted transition-colors group-hover:text-accent">
-            (
-          </span>
-          Let&apos;s work together
           <span
             aria-hidden
-            className="transition-transform duration-200 group-hover:translate-x-0.5"
+            className="text-muted transition-all duration-300 ease-out group-hover:-translate-x-2 group-hover:text-accent"
           >
-            ↗
+            (
           </span>
-          <span aria-hidden className="text-muted transition-colors group-hover:text-accent">
+          <span className="px-1 transition-colors group-hover:text-accent">
+            Let&apos;s work together
+          </span>
+          <LaunchArrow />
+          <span
+            aria-hidden
+            className="text-muted transition-all duration-300 ease-out group-hover:translate-x-2 group-hover:text-accent"
+          >
             )
           </span>
         </a>

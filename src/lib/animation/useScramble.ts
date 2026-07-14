@@ -26,7 +26,17 @@ export function useScramble<T extends HTMLElement>(
     delay = 0,
     duration = 1400,
     active = true,
-  }: { delay?: number; duration?: number; active?: boolean } = {},
+    cycleMs = 0,
+  }: {
+    delay?: number;
+    duration?: number;
+    active?: boolean;
+    // How often (ms) each unresolved character re-randomises its noise glyph.
+    // 0 = every frame (frantic — good for short words like nav links / "Loading").
+    // A larger value (e.g. 55) calms the flicker for long strings so they don't
+    // read as aggressive.
+    cycleMs?: number;
+  } = {},
 ) {
   const ref = useRef<T>(null);
 
@@ -62,20 +72,39 @@ export function useScramble<T extends HTMLElement>(
     // flashes its real text before its turn to resolve comes up.
     el.textContent = noise();
 
+    // The currently-displayed noise glyph per char. When `cycleMs` throttling is
+    // on we keep these steady between cycles instead of re-rolling every frame.
+    const noiseChars = chars.map(
+      () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
+    );
+
     let raf = 0;
     let startTime = 0;
     let cancelled = false;
+    let lastStep = -1;
 
     const tick = (now: number) => {
       if (!startTime) startTime = now;
       const elapsed = now - startTime;
 
+      // Re-roll noise glyphs every frame (cycleMs <= 0) or once per cycle window.
+      const step = cycleMs > 0 ? Math.floor(elapsed / cycleMs) : -2;
+      const reroll = cycleMs <= 0 || step !== lastStep;
+      lastStep = step;
+
       let out = "";
       for (let i = 0; i < chars.length; i++) {
         const ch = chars[i];
-        if (ch === " " || ch === "\n") out += ch;
-        else if (elapsed >= resolveAt[i]) out += ch;
-        else out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        if (ch === " " || ch === "\n") {
+          out += ch;
+        } else if (elapsed >= resolveAt[i]) {
+          out += ch;
+        } else {
+          if (reroll) {
+            noiseChars[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+          }
+          out += noiseChars[i];
+        }
       }
       el.textContent = out;
 

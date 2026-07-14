@@ -71,7 +71,9 @@ export default function Journey() {
         gsap.set(cards, { y: 34, autoAlpha: 0 });
         gsap.set(bodies, { y: 18, autoAlpha: 0 });
         // Skills layer sits on top but empty — every piece hidden until handoff.
-        gsap.set(skLines, { yPercent: 110 });
+        // 130 (not 110) so the mask clip's descender padding can't leave the
+        // tops of the hidden heading letters peeking out under the Experience one.
+        gsap.set(skLines, { yPercent: 130 });
         gsap.set(skFades, { autoAlpha: 0, y: 40 });
 
         const tl = gsap.timeline({

@@ -7,6 +7,7 @@ import { Flip } from "gsap/Flip";
 import { me, type Project } from "@/data/me";
 import { useIsoLayoutEffect } from "@/lib/animation/reveal";
 import { useScramble } from "@/lib/animation/useScramble";
+import { LaunchArrow } from "@/components/ui/LaunchArrow";
 
 const NAV_LINKS = [
   { label: "Projects", href: "#showcase" },
@@ -31,6 +32,12 @@ const PHASE_ARRIVE = 0.6; // for the photo-grow and bio-stream phases
 
 const FRAME_MARGIN = 12; // px — matches `inset-3` on the cards
 const PREV_CARD_SCALE = 0.92; // how much a covered card recedes
+
+// ── The little photo BETWEEN "structured" and "ambition" ──────────────────────
+// Its START size. This slot's box is exactly where the photo opens FROM, so
+// changing these two values resizes the image sitting between the hero words.
+const PHOTO_W = "17vw";
+const PHOTO_H = "27vh";
 
 // Intro (load) palette — GSAP can't tween CSS vars, so use the raw hexes.
 // Keep NEON in sync with `--accent` in globals.css (GSAP tweens the raw value).
@@ -124,20 +131,10 @@ function VisitLink({ href }: { href: string }) {
       >
         (
       </span>
-      <span className="relative -top-[2px] px-1 transition-colors group-hover:text-accent">
+      <span className="px-1 transition-colors group-hover:text-accent">
         Visit Site
       </span>
-      <span
-        aria-hidden
-        className="relative inline-flex h-[1em] w-[1em] items-center justify-center overflow-hidden"
-      >
-        <span className="absolute transition-transform duration-300 ease-out group-hover:-translate-y-[1.1em] group-hover:translate-x-[1.1em]">
-          ↗
-        </span>
-        <span className="absolute -translate-x-[1.1em] translate-y-[1.1em] transition-transform duration-300 ease-out group-hover:translate-x-0 group-hover:translate-y-0">
-          ↗
-        </span>
-      </span>
+      <LaunchArrow />
       <span
         aria-hidden
         className="inline-block text-muted transition-all duration-300 ease-out group-hover:translate-x-2 group-hover:text-accent"
@@ -191,17 +188,20 @@ function PanelContent({ project }: { project: Project }) {
       {/* RIGHT column — meta pinned to the top, preview pinned to the bottom.
           Independent of the left column, so the picture stays put. */}
       <div className="order-1 flex flex-col justify-between gap-8 lg:order-2">
-        <div className="sc-reveal">
-          <p className="font-mono text-sm uppercase tracking-[0.25em] text-foreground sm:text-[0.95rem]">
+        {/* Right meta — on card-in these animate as a cascade (see the scroll
+            timeline): category fades, its line draws L→R, tech fades, its line
+            draws. `.sc-meta` = fade-in pieces, `.sc-line` = the drawn dividers. */}
+        <div>
+          <p className="sc-meta font-mono text-sm uppercase tracking-[0.25em] text-foreground sm:text-[0.95rem]">
             {project.category}
           </p>
           {/* Divider ABOVE the tech list — tweak length via the `w-[..]` here. */}
-          <div className="sc-divider my-4 h-px w-[60%] bg-white/15" />
-          <p className="font-mono text-[0.78rem] uppercase tracking-[0.15em] text-muted">
+          <div className="sc-line sc-divider my-4 h-px w-[60%] origin-left bg-white/15" />
+          <p className="sc-meta font-mono text-[0.78rem] uppercase tracking-[0.15em] text-muted">
             {project.tech.join("   •   ")}
           </p>
           {/* Divider BELOW the tech list — its own independent length. */}
-          <div className="sc-divider mt-4 h-px w-[45%] bg-white/15" />
+          <div className="sc-line sc-divider mt-4 h-px w-[45%] origin-left bg-white/15" />
         </div>
         <div className="sc-reveal relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.01]">
           {project.image ? (
@@ -314,6 +314,10 @@ export default function Showcase({ projects }: { projects: Project[] }) {
   const scrambleRef = useScramble<HTMLParagraphElement>(helloText, {
     delay: 2300,
     duration: 1100,
+    // This line is long, so re-rolling every glyph every frame reads as frantic.
+    // Throttle the noise so the decode feels calm (nav links / "Loading" stay
+    // at 0 = every-frame, which looks great on short words).
+    cycleMs: 55,
   });
   // The preloader word decodes with the same scramble effect as everything else.
   const loadingRef = useScramble<HTMLSpanElement>("Loading", {
@@ -352,22 +356,33 @@ export default function Showcase({ projects }: { projects: Project[] }) {
       // Pre-states: everything but the brackets + "Loading" is hidden; the
       // wordmark waits below its clip in yellow.
       gsap.set(".sc-hero-fade", { autoAlpha: 0 });
-      gsap.set(".sc-word", { yPercent: 120, color: YELLOW });
+      // 140 (not 120) so the clip's `pb-[1.6vw]` descender padding can't leave
+      // the yellow letter-tops peeking at the bottom of the clip during load.
+      gsap.set(".sc-word", { yPercent: 140, color: YELLOW });
 
-      // Shrink the big hero brackets down onto the small preloader slots, record
-      // that state, then release them back to natural. Flip.from then animates
-      // the SAME brackets from the recorded (small, centered) box out to their
-      // hero position — so the "( Loading )" brackets *are* the hero brackets.
+      // Fit the big hero brackets down onto the small (invisible) preloader
+      // slots and LEAVE the fit transform applied — so the visible "( Loading )"
+      // brackets ARE the hero brackets, held small. (Previously we used
+      // Flip.from at t=1.5, but its immediate-render never pinned the small
+      // "from" state, so the brackets sat at full 9.5rem the whole load. Holding
+      // the fit transform directly is bulletproof — and now the slot font-size
+      // genuinely controls the loading bracket size.)
       Flip.fit(lBr, lSlot, { scale: true });
       Flip.fit(rBr, rSlot, { scale: true });
-      const bracketState = Flip.getState([lBr, rBr]);
-      gsap.set([lBr, rBr], { clearProps: "transform" });
 
       const tl = gsap.timeline();
-      // Brackets hold small (Flip.from renders the "from" state immediately)
-      // while "Loading" scrambles, then expand outward into the hero brackets.
-      tl.add(
-        Flip.from(bracketState, { duration: 1.15, ease: "power3.inOut" }),
+      // Brackets hold small (the fit transform above) while "Loading" scrambles,
+      // then EXPAND out to their natural hero size + position.
+      tl.to(
+        [lBr, rBr],
+        {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 1.15,
+          ease: "power3.inOut",
+        },
         1.5,
       );
       // "Loading" clears as the brackets pull apart.
@@ -417,7 +432,8 @@ export default function Showcase({ projects }: { projects: Project[] }) {
         root.current,
       );
       const photoEl = root.current!.querySelector<HTMLElement>(".sc-photo")!;
-      const slotEl = root.current!.querySelector<HTMLElement>(".sc-photo-slot")!;
+      const slotEl =
+        root.current!.querySelector<HTMLElement>(".sc-photo-slot")!;
       const pinBox = pin.current!.getBoundingClientRect();
       const slotBox = slotEl.getBoundingClientRect();
 
@@ -446,6 +462,9 @@ export default function Showcase({ projects }: { projects: Project[] }) {
       // Each card's inner pieces start hidden + nudged down; they fade up in a
       // stagger as the card settles (see the forEach below).
       gsap.set(".sc-reveal", { autoAlpha: 0, y: 26 });
+      // Right-meta cascade: text pieces fade up, dividers draw from the left.
+      gsap.set(".sc-meta", { autoAlpha: 0, y: 12 });
+      gsap.set(".sc-line", { scaleX: 0 });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -465,7 +484,10 @@ export default function Showcase({ projects }: { projects: Project[] }) {
             // (hence the -0.4 offset on its arrival fraction).
             const idx = Math.max(
               0,
-              Math.min(n - 1, Math.floor((t - projectsStart) / UNIT_CARD - 0.4)),
+              Math.min(
+                n - 1,
+                Math.floor((t - projectsStart) / UNIT_CARD - 0.4),
+              ),
             );
             setActive(idx);
           },
@@ -535,11 +557,45 @@ export default function Showcase({ projects }: { projects: Project[] }) {
           },
           at + arrive * 0.35,
         );
+
+        // Right-meta CASCADE — category fades, its line draws L→R, tech fades,
+        // its line draws; each step follows the last, timed to the card's slide.
+        const meta = gsap.utils.toArray<HTMLElement>(".sc-meta", card);
+        const lines = gsap.utils.toArray<HTMLElement>(".sc-line", card);
+        const rStart = at + arrive * 0.3;
+        const rStep = (arrive * 0.6) / 4;
+        [meta[0], lines[0], meta[1], lines[1]].forEach((el, s) => {
+          const isLine = s % 2 === 1;
+          tl.to(
+            el,
+            isLine
+              ? { scaleX: 1, duration: rStep * 1.6, ease: "power2.out" }
+              : {
+                  autoAlpha: 1,
+                  y: 0,
+                  duration: rStep * 1.3,
+                  ease: "power2.out",
+                },
+            rStart + rStep * s,
+          );
+        });
+
         if (i > 0) {
           const prev = cards[i - 1];
           tl.to(
             gsap.utils.toArray<HTMLElement>(".sc-reveal", prev),
             { autoAlpha: 0, duration: arrive * 0.5 },
+            at,
+          );
+          // Reset the outgoing card's right-meta so it re-cascades on scrub-back.
+          tl.to(
+            gsap.utils.toArray<HTMLElement>(".sc-meta", prev),
+            { autoAlpha: 0, duration: arrive * 0.5 },
+            at,
+          );
+          tl.to(
+            gsap.utils.toArray<HTMLElement>(".sc-line", prev),
+            { scaleX: 0, duration: arrive * 0.5 },
             at,
           );
           tl.to(prev, { scale: PREV_CARD_SCALE, duration: arrive }, at);
@@ -596,7 +652,7 @@ export default function Showcase({ projects }: { projects: Project[] }) {
           <div className="sc-loading flex items-center justify-center gap-3">
             <span
               aria-hidden
-              className="sc-load-slot-l select-none font-sans text-xl font-thin leading-none opacity-0"
+              className="sc-load-slot-l select-none font-sans text-sm font-thin leading-none opacity-0"
             >
               (
             </span>
@@ -608,7 +664,7 @@ export default function Showcase({ projects }: { projects: Project[] }) {
             </span>
             <span
               aria-hidden
-              className="sc-load-slot-r select-none font-sans text-xl font-thin leading-none opacity-0"
+              className="sc-load-slot-r select-none font-sans text-sm font-thin leading-none opacity-0"
             >
               )
             </span>
@@ -635,12 +691,6 @@ export default function Showcase({ projects }: { projects: Project[] }) {
             ))}
           </nav>
         </header>
-
-        {/* "||||" menu — hidden during the hero, fades in once the photo fills
-            (the top nav has scrolled away by then); hover expands the links. */}
-        <div className="sc-menu absolute right-6 top-11 z-[110] opacity-0 sm:right-12 lg:right-16">
-          <MenuToggle />
-        </div>
 
         {/* Headline + the bracketed HELLO card. The block itself is NOT faded —
             the brackets inside it must stay visible through the preloader — only
@@ -678,9 +728,13 @@ export default function Showcase({ projects }: { projects: Project[] }) {
                 structured
               </span>
             </span>
-            {/* Little photo before it scrolls open — TWEAK its start size here
-                (this slot's measured box is the photo's opening geometry). */}
-            <div className="sc-photo-slot h-[27vh] w-[17vw] shrink-0" aria-hidden />
+            {/* Little photo before it scrolls open — its start size is the
+                PHOTO_W / PHOTO_H constants at the top of this file. */}
+            <div
+              className="sc-photo-slot shrink-0"
+              style={{ width: PHOTO_W, height: PHOTO_H }}
+              aria-hidden
+            />
             <span className="block overflow-hidden pb-[1.6vw] pr-[0.8vw]">
               <span className="sc-word headline-echo pointer-events-auto block cursor-default font-display text-[9.5vw] leading-[0.85] lowercase tracking-tight">
                 ambition
@@ -720,6 +774,14 @@ export default function Showcase({ projects }: { projects: Project[] }) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* "||||" menu — moved OUT of the pinned box and FIXED to the viewport so
+          it persists across the whole site, not just the hero. The scroll
+          timeline still reveals it (it's a descendant of the scoped root) once
+          the photo fills; being fixed, it then stays put through every section. */}
+      <div className="sc-menu fixed right-6 top-11 z-[200] opacity-0 sm:right-12 lg:right-16">
+        <MenuToggle />
       </div>
     </section>
   );
