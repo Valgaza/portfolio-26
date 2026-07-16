@@ -20,7 +20,9 @@ export type Project = {
   category: string; // shown as the section label, e.g. "Ecommerce Website"
   description: string; // 2–3 sentences
   tech: string[];
-  status?: "live" | "in-progress"; // controls the CTA (Visit Site vs In Progress)
+  status?: "live" | "in-progress" | "research"; // controls the CTA label
+  featured?: boolean; // spotlighted in the pinned <Showcase />; all projects
+  // (featured or not) appear in the <ProjectGallery /> accordion.
   links: { label: string; href: string }[]; // live demo, GitHub, etc.
   image?: string; // e.g. "/projects/modevelle.jpg" (a file in /public/projects)
 };

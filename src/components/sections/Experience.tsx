@@ -4,94 +4,70 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { me } from "@/data/me";
-import { MaskLine, useIsoLayoutEffect } from "@/lib/animation/reveal";
+import { useIsoLayoutEffect } from "@/lib/animation/reveal";
 
 /**
- * Journey — Experience + Skills fused into ONE pinned "chapter".
+ * Experience — a pinned "chapter". The viewport frame pins ONCE and stays put;
+ * scrolling doesn't move the section, it PROGRESSES a horizontal timeline left→
+ * right (the accent rail fills, nodes pop, cards + bodies resolve in), then the
+ * drawn timeline rests for a beat before the pin releases to the next section.
  *
- * THE POINT: two separate pinned sections can't hand off cleanly — each reserves
- * its own block of scroll space, so the second visibly slides up as a new panel.
- * Here the viewport frame pins ONCE and never moves; the two "sections" are
- * absolutely stacked layers inside it, and a single scrubbed timeline cross-
- * transitions between them:
+ * (This used to be fused with Skills into one morphing chapter — they're now
+ * separate sections with the project gallery between them, so the handoff is
+ * gone; this is just the timeline, standalone.)
  *
- *   1. draw the Experience timeline  → hold
- *   2. HANDOFF — the Experience title + timeline drift up and out while the
- *      Skills title rises into the same spot and the toolkit grid resolves in
- *      (a "stacked replace" — one title leaves as the next takes its place)
- *   3. hold on Skills → release to Contact
- *
- * On mobile / reduced-motion the two layers un-stack into normal flow (no pin):
- * a vertical Experience timeline followed by the toolkit grid, both static.
+ * On mobile / reduced-motion the desktop stepper is hidden and a plain vertical
+ * timeline is shown instead (no pin, no scrub).
  */
 const exp = me.experiences;
 const n = exp.length;
 
-// How much scroll (viewport-heights) the single pinned chapter consumes. It
-// covers BOTH former sections plus the handoff, so it's naturally long.
-const JOURNEY_SCROLL = 2.4;
+// How much scroll (viewport-heights) the pinned chapter consumes: the timeline
+// draw plus a hold at the end. Shorter than the old fused chapter since it no
+// longer covers Skills too.
+const EXP_SCROLL = 1.5;
 
-// Outlined skill pill. On hover it lifts, its border turns neon, the text
-// brightens, and a soft accent glow blooms behind it.
-const CHIP_CLASS =
-  "cursor-default whitespace-nowrap rounded-full border border-white/10 px-4 py-2 font-mono text-sm uppercase tracking-[0.1em] text-muted transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-accent/60 hover:text-foreground hover:shadow-[0_0_22px_-6px_var(--accent)]";
-
-export default function Journey() {
+export default function Experience() {
   const root = useRef<HTMLElement>(null);
   const pin = useRef<HTMLDivElement>(null);
-  const expLayer = useRef<HTMLDivElement>(null);
-  const skillsLayer = useRef<HTMLDivElement>(null);
+  const layer = useRef<HTMLDivElement>(null);
 
   useIsoLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const mm = gsap.matchMedia();
 
-    // Desktop + motion: the pinned, cross-transitioning chapter.
+    // Desktop + motion: the pinned, scrubbed timeline draw.
     mm.add(
       "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
       () => {
-        const qe = gsap.utils.selector(expLayer.current!);
-        const qs = gsap.utils.selector(skillsLayer.current!);
+        const q = gsap.utils.selector(layer.current!);
+        const fill = q(".exp-fill");
+        const nodes = q(".exp-node");
+        const cards = q(".exp-card");
+        const bodies = q(".exp-body");
 
-        const expHead = qe(".j-head");
-        const expTimeline = qe(".exp-timeline");
-        const fill = qe(".exp-fill");
-        const nodes = qe(".exp-node");
-        const cards = qe(".exp-card");
-        const bodies = qe(".exp-body");
-
-        const skLines = qs(".mask-line__inner");
-        const skFades = qs(".reveal-fade");
-
-        // ── initial states ─────────────────────────────────────────────────
-        // Experience header is visible from the start (the chapter opens on it);
-        // the timeline pieces are undrawn.
+        // ── initial (undrawn) states ────────────────────────────────────────
         gsap.set(fill, { width: 0 });
         gsap.set(nodes, { scale: 0.5, autoAlpha: 0 });
         gsap.set(cards, { y: 34, autoAlpha: 0 });
         gsap.set(bodies, { y: 18, autoAlpha: 0 });
-        // Skills layer sits on top but empty — every piece hidden until handoff.
-        // 130 (not 110) so the mask clip's descender padding can't leave the
-        // tops of the hidden heading letters peeking out under the Experience one.
-        gsap.set(skLines, { yPercent: 130 });
-        gsap.set(skFades, { autoAlpha: 0, y: 40 });
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
             start: "top top",
-            end: () => "+=" + window.innerHeight * JOURNEY_SCROLL,
-            // Pin the INNER box, not the <section> (which is a flex child of
-            // <main>). Pinning a flex child directly collapses the pin-spacer, so
-            // no scroll space is reserved and later sections hide underneath.
+            end: () => "+=" + window.innerHeight * EXP_SCROLL,
+            // Pin the INNER box, not the <section> (a flex child of <main>) —
+            // pinning a flex child collapses the pin-spacer so the next section
+            // hides underneath. Opaque + z-10 so nothing bleeds through.
             pin: pin.current,
             scrub: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        // ── PHASE 1 — draw the Experience timeline (0 → ~0.34) ──────────────
-        const spread = 0.24; // where the last node lands
+        // ── draw the timeline (0 → ~0.66), spread across the scrub ───────────
+        const spread = 0.6; // where the last node lands
         tl.to(
           fill,
           {
@@ -120,40 +96,8 @@ export default function Journey() {
           );
         }
 
-        // ── PHASE 2 — hold (~0.34 → 0.46): the drawn timeline rests. ─────────
-
-        // ── PHASE 3 — HANDOFF (0.46 → ~0.66) ────────────────────────────────
-        // Experience title + timeline drift UP and fade out…
-        tl.to(
-          expHead,
-          { y: -90, autoAlpha: 0, ease: "power2.in", duration: 0.13 },
-          0.46,
-        );
-        tl.to(
-          expTimeline,
-          { y: -90, autoAlpha: 0, ease: "power2.in", duration: 0.13 },
-          0.47,
-        );
-        // …as the Skills title rises into the same spot and the grid resolves in.
-        tl.to(
-          skLines,
-          { yPercent: 0, ease: "power4.out", duration: 0.16, stagger: 0.03 },
-          0.53,
-        );
-        tl.to(
-          skFades,
-          {
-            autoAlpha: 1,
-            y: 0,
-            ease: "power2.out",
-            duration: 0.18,
-            stagger: 0.035,
-          },
-          0.57,
-        );
-
-        // ── PHASE 4 — hold on Skills (~0.66 → 1.0), then the pin releases. ───
-        tl.to({}, { duration: 0.34 }, 0.66);
+        // ── hold on the fully-drawn timeline, then the pin releases ──────────
+        tl.to({}, { duration: 0.34 }, 0.72);
       },
     );
 
@@ -162,21 +106,18 @@ export default function Journey() {
 
   return (
     <section ref={root} id="experience" className="relative">
-      {/* The pinned box. Pinning THIS inner div (not the <section>, a flex child
-          of <main>) keeps ScrollTrigger's pin-spacer intact so the sections
-          after it get their scroll space. Opaque + z-10 so nothing bleeds
-          through while it's pinned. */}
+      {/* The pinned box (inner div, not the <section>). Opaque + z-10 so nothing
+          bleeds through while it's pinned. */}
       <div
         ref={pin}
         className="relative z-10 bg-background md:h-screen md:overflow-hidden"
       >
-        {/* ── Layer A — Experience ───────────────────────────────────────── */}
         <div
-          ref={expLayer}
+          ref={layer}
           className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:py-[14vh] lg:px-20"
         >
           {/* Header */}
-          <div className="j-head flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col gap-5">
               <p className="font-mono text-xs uppercase tracking-[0.35em] text-muted">
                 Career
@@ -285,52 +226,6 @@ export default function Journey() {
                   <p className="mt-3 text-sm leading-relaxed text-muted">
                     {e.description}
                   </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Layer B — Skills (stacked on top, hidden until the handoff) ────── */}
-        <div
-          ref={skillsLayer}
-          id="skills"
-          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:py-[14vh] lg:px-20"
-        >
-          {/* Header */}
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex flex-col gap-5">
-              <p className="reveal-fade font-mono text-xs uppercase tracking-[0.35em] text-muted">
-                Full Toolkit
-              </p>
-              <h2 className="font-display text-4xl tracking-tight sm:text-5xl lg:text-6xl">
-                <MaskLine>Technologies I work with</MaskLine>
-              </h2>
-            </div>
-            <p className="reveal-fade max-w-xs text-lg leading-relaxed text-muted lg:text-right">
-              Grouped by practice area—same stack I use on production work and
-              personal builds.
-            </p>
-          </div>
-
-          {/* Grid of skill groups. */}
-          <div className="md:flex md:flex-1 md:items-center">
-            <div className="grid w-full grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-              {me.skills.map((group) => (
-                <div
-                  key={group.category}
-                  className="reveal-fade flex flex-col gap-5"
-                >
-                  <h3 className="font-mono text-[0.92rem] uppercase tracking-[0.2em] text-accent">
-                    {group.category}
-                  </h3>
-                  <ul className="flex flex-wrap gap-3">
-                    {group.items.map((item) => (
-                      <li key={item} className={CHIP_CLASS}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               ))}
             </div>

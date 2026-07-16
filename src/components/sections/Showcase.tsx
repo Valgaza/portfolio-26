@@ -173,10 +173,12 @@ function PanelContent({ project }: { project: Project }) {
           {project.description}
         </p>
         <div className="sc-reveal">
-          {project.status === "in-progress" ? (
+          {project.status && project.status !== "live" ? (
             <span className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-muted">
               <span aria-hidden>(</span>
-              <span className="px-1">In Progress</span>
+              <span className="px-1">
+                {project.status === "research" ? "Research" : "In Progress"}
+              </span>
               <span aria-hidden>)</span>
             </span>
           ) : (
