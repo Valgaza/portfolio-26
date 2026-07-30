@@ -36,7 +36,7 @@ export default function Footer() {
 
   return (
     <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-24 sm:px-12 lg:px-20">
-      <div className="h-px w-full bg-white/15" />
+      <div className="h-px w-full bg-black/15" />
 
       <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-3">
         {/* Contact links */}

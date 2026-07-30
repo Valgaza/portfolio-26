@@ -159,7 +159,7 @@ export default function Experience() {
 
               {/* Row 2 — rail (track + accent fill + dot) with nodes on it. */}
               <div className="relative col-span-full flex h-9 items-center">
-                <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/12" />
+                <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-black/12" />
                 <div
                   className="exp-fill absolute left-0 top-1/2 h-px -translate-y-1/2 bg-accent"
                   style={{ width: 0 }}

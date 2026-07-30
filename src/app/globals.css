@@ -1,18 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* Faithful study of the Roshan Sahu portfolio — near-black canvas, warm
-     off-white ink, and a single acid-yellow accent used on the hero words. */
-  --background: #181716;
-  --foreground: #f4f4ef;
-  --muted: #8a8a8a;
-  /* Neon lime/chartreuse accent — used on the hero words, the progress ring,
-     the skills labels, and every hover state. Change this ONE value to retune
-     the accent everywhere. */
-  --accent: #d4ff00;
-  /* The one light section (Services) inverts to these. */
-  --surface-light: #f5f5f2;
-  --on-surface-light: #101014;
+  /* LIGHT INDUSTRIAL ("Podium") — warm-paper canvas, charcoal ink, a single
+     cool "signal" accent, and hairline rules. The big divergence away from the
+     dark Roshan study. Flip THIS block to retune the whole site. */
+  --background: #f4f3ef; /* warm white paper */
+  --foreground: #1a1a1a; /* charcoal ink */
+  --muted: #57544e; /* warm gray — ~9:1 on the paper, passes AA */
+  /* Single cool "signal" accent — cobalt. Drives active/hover states, the
+     signal-trace line, and key numerals. Change this ONE value to retune the
+     accent everywhere. (Warm alternative to trial: safety orange #ff5a1f.) */
+  --accent: #1f3bff;
+  --on-accent: #f4f3ef; /* ink/paper laid on top of an accent fill */
+  /* Inverted blocks (a dark "signal" section) flip to these. */
+  --surface-dark: #141414;
+  --on-surface-dark: #f4f3ef;
 
   /* ── FONT ROLES ──────────────────────────────────────────────────────────
      The site renders three type roles. Each points at ONE loaded family (the
@@ -29,8 +31,9 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --color-surface-light: var(--surface-light);
-  --color-on-surface-light: var(--on-surface-light);
+  --color-on-accent: var(--on-accent);
+  --color-surface-dark: var(--surface-dark);
+  --color-on-surface-dark: var(--on-surface-dark);
   --font-sans: var(--role-body);
   --font-mono: var(--role-mono);
   --font-display: var(--role-display);
