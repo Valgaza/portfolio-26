@@ -174,7 +174,7 @@ export default function Experience() {
                 >
                   {exp.map((e, i) => (
                     <div key={`node-${e.org}`} className="flex items-center">
-                      <span className="exp-node relative z-10 flex h-7 w-7 items-center justify-center rounded-[5px] bg-accent font-mono text-xs font-semibold text-background">
+                      <span className="exp-node relative z-10 flex h-7 w-7 items-center justify-center rounded-[5px] bg-accent font-mono text-xs font-semibold text-on-accent">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     </div>
@@ -210,7 +210,7 @@ export default function Experience() {
                   key={`m-${e.org}`}
                   className="relative border-l-2 border-accent/50 pl-6"
                 >
-                  <span className="absolute -left-[15px] top-0 flex h-7 w-7 items-center justify-center rounded-[5px] bg-accent font-mono text-xs font-semibold text-background">
+                  <span className="absolute -left-[15px] top-0 flex h-7 w-7 items-center justify-center rounded-[5px] bg-accent font-mono text-xs font-semibold text-on-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent">

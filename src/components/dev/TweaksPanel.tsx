@@ -62,11 +62,11 @@ type Preset = Tokens & { name: string; note: string };
 const PRESETS: Preset[] = [
   {
     name: "Light Industrial",
-    note: "COMMITTED direction — warm paper, charcoal ink, cobalt signal accent. Motif: hairline grid, technical mono labels, a drawn signal trace.",
+    note: "COMMITTED direction — warm paper, charcoal ink, safety-orange signal accent. Motif: hairline grid, technical mono labels, a drawn signal trace.",
     background: "#f4f3ef",
     foreground: "#1a1a1a",
     muted: "#57544e",
-    accent: "#1f3bff",
+    accent: "#ff5a1f",
     display: DISPLAY_FONTS["Anton"],
     body: BODY_FONTS["Geist"],
     mono: MONO_FONTS["Martian Mono"],
