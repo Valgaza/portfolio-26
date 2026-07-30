@@ -13,17 +13,12 @@ import { getProjects } from "@/lib/projects";
 // it lives outside the section flow.
 export default function Home() {
   // Projects come from `content/projects/*.json` (folder-driven — add a file to
-  // add a card). Loaded here on the server and passed to the client sections.
+  // add a card). Loaded here on the server and passed to the gallery.
   const projects = getProjects();
-
-  // Showcase spotlights the `"featured": true` subset; the gallery shows all of
-  // them. Until any project is flagged, both fall back to the full list.
-  const featured = projects.filter((p) => p.featured);
-  const spotlight = featured.length ? featured : projects;
 
   return (
     <main className="flex flex-col">
-      <Showcase projects={spotlight} />
+      <Showcase />
       <Experience />
       <ProjectGallery projects={projects} />
       <Skills />

@@ -13,6 +13,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/lib/animation/SmoothScrollProvider";
+import Preloader from "@/components/ui/Preloader";
 // DEV-ONLY identity explorer. Remove this import + the <TweaksPanel/> below
 // before shipping (and the alternate fonts loaded here, if unused).
 import TweaksPanel from "@/components/dev/TweaksPanel";
@@ -88,6 +89,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <Preloader />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         {/* DEV-ONLY — delete before launch. */}
         <TweaksPanel />

@@ -61,12 +61,12 @@ type Preset = Tokens & { name: string; note: string };
 
 const PRESETS: Preset[] = [
   {
-    name: "Reference",
-    note: "The current inherited look — baseline to compare against.",
-    background: "#181716",
-    foreground: "#f4f4ef",
-    muted: "#8a8a8a",
-    accent: "#d4ff00",
+    name: "Light Industrial",
+    note: "COMMITTED direction — warm paper, charcoal ink, cobalt signal accent. Motif: hairline grid, technical mono labels, a drawn signal trace.",
+    background: "#f4f3ef",
+    foreground: "#1a1a1a",
+    muted: "#57544e",
+    accent: "#1f3bff",
     display: DISPLAY_FONTS["Anton"],
     body: BODY_FONTS["Geist"],
     mono: MONO_FONTS["Martian Mono"],
