@@ -67,7 +67,10 @@ export function useScrollReveal(
         scrollTrigger: { trigger: scope.current!, start, once: true },
       });
 
-      const lines = gsap.utils.toArray<HTMLElement>(".mask-line__inner");
+      const lines = gsap.utils.toArray<HTMLElement>(
+        ".mask-line__inner",
+        scope.current!,
+      );
       if (lines.length) {
         gsap.set(lines, { yPercent: 110 });
         tl.to(lines, {
@@ -78,7 +81,10 @@ export function useScrollReveal(
         });
       }
 
-      const fades = gsap.utils.toArray<HTMLElement>(".reveal-fade");
+      const fades = gsap.utils.toArray<HTMLElement>(
+        ".reveal-fade",
+        scope.current!,
+      );
       if (fades.length) {
         tl.from(
           fades,

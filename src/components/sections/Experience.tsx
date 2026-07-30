@@ -195,7 +195,7 @@ export default function Experience() {
                     {e.description}
                   </p>
                   {e.location ? (
-                    <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-muted/70">
+                    <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-muted">
                       {e.location}
                     </p>
                   ) : null}

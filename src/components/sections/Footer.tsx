@@ -64,10 +64,10 @@ export default function Footer() {
 
         {/* Utilities */}
         <div className="flex flex-col gap-3">
-          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted">
+          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] tabular-nums text-muted">
             IST — {time ?? "--:--:--"}
           </span>
-          <a href="#hero" className={LINK_CLASS}>
+          <a href="#showcase" className={LINK_CLASS}>
             Back to top
           </a>
         </div>
@@ -78,7 +78,7 @@ export default function Footer() {
           <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted">
             Design by Roshan Sahu &amp; Rekhchand
           </span>
-          <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted/70">
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted">
             Design-to-code study · rebuilt for learning
           </span>
         </div>

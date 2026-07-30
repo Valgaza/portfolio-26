@@ -25,6 +25,8 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   const { messages, sendMessage, status, error, stop } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
@@ -39,10 +41,44 @@ export default function ChatWidget() {
     }
   }, [messages, open, status]);
 
-  // Esc closes the drawer.
+  // Move focus into the drawer on open, restore it to the trigger on close.
+  useEffect(() => {
+    if (open) {
+      lastFocused.current = document.activeElement as HTMLElement | null;
+      asideRef.current
+        ?.querySelector<HTMLElement>(
+          'button, [href], input, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        ?.focus();
+    } else {
+      lastFocused.current?.focus?.();
+    }
+  }, [open]);
+
+  // While open: Esc closes, and Tab is trapped inside the drawer so keyboard
+  // focus can't wander to the (inert) page behind it.
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !asideRef.current) return;
+      const items = asideRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
@@ -62,12 +98,12 @@ export default function ChatWidget() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open the AI chat"
-        className={`group fixed bottom-6 left-1/2 z-[190] flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/15 bg-background/80 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-all duration-300 hover:border-accent/60 hover:text-accent ${
+        className={`group fixed bottom-6 left-1/2 z-[190] flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/15 bg-background/80 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-[color,border-color,opacity,transform] duration-300 hover:border-accent/60 hover:text-accent ${
           open ? "pointer-events-none translate-y-24 opacity-0" : "opacity-100"
         }`}
       >
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+          <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
         </span>
         Ask about {me.name.split(" ")[0]}
@@ -84,9 +120,11 @@ export default function ChatWidget() {
 
       {/* ── The drawer ─────────────────────────────────────────────────────── */}
       <aside
+        ref={asideRef}
         role="dialog"
         aria-label={`Chat about ${me.name}`}
         aria-modal="true"
+        inert={!open}
         className={`fixed z-[200] flex flex-col border-white/10 bg-background transition-transform duration-300 ease-out
           inset-x-0 bottom-0 h-[85vh] rounded-t-2xl border-t
           sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[420px] sm:max-w-full sm:rounded-none sm:border-l sm:border-t-0
@@ -177,8 +215,7 @@ export default function ChatWidget() {
 
           {error && (
             <p className="text-sm leading-relaxed text-red-400/80">
-              Something went wrong reaching the assistant. It may not be
-              configured yet — try again in a moment.
+              Can&apos;t reach the assistant right now. Please try again shortly.
             </p>
           )}
         </div>
@@ -194,8 +231,9 @@ export default function ChatWidget() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            aria-label={`Ask about ${me.name.split(" ")[0]}`}
             placeholder={`Ask about ${me.name.split(" ")[0]}…`}
-            className="flex-1 rounded-full border border-white/15 bg-transparent px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none"
+            className="flex-1 rounded-full border border-white/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
           />
           {busy ? (
             <button

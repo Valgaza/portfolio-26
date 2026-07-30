@@ -10,7 +10,7 @@ import { useScramble } from "@/lib/animation/useScramble";
 import { LaunchArrow } from "@/components/ui/LaunchArrow";
 
 const NAV_LINKS = [
-  { label: "Projects", href: "#showcase" },
+  { label: "Projects", href: "#gallery" },
   { label: "About Me", href: "#showcase" },
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
@@ -82,25 +82,41 @@ function NavLink({
 /** The "||||" menu toggle — four vertical bars parked top-right, revealed once
  *  the photo fills the frame; hovering expands the nav links beneath it. */
 function MenuToggle() {
+  // Click toggles `open` (keyboard-operable); hover and keyboard focus reveal
+  // the list too (`group-hover:` / `focus-within:`). Without this the nav was
+  // mouse-hover-only and unreachable by keyboard once the header scrolled away.
+  const [open, setOpen] = useState(false);
   return (
-    <div className="group flex flex-col items-end">
+    <div
+      className="group flex flex-col items-end"
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         type="button"
-        aria-label="Open menu"
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-[4px] p-2"
       >
         {[0, 1, 2, 3].map((i) => (
           <span
             key={i}
-            className="h-5 w-[2px] bg-foreground transition-all duration-300 group-hover:h-6 group-hover:bg-accent"
+            className="h-5 w-[2px] bg-foreground transition-[height,background-color] duration-300 group-hover:h-6 group-hover:bg-accent"
           />
         ))}
       </button>
-      <ul className="pointer-events-none flex -translate-y-1 flex-col items-end gap-4 pr-2 pt-5 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+      <ul
+        className={`flex flex-col items-end gap-4 pr-2 pt-5 transition-[opacity,transform] duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 focus-within:pointer-events-auto focus-within:translate-y-0 focus-within:opacity-100 ${
+          open
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-1 opacity-0"
+        }`}
+      >
         {NAV_LINKS.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
+              onClick={() => setOpen(false)}
               className="font-mono text-sm uppercase tracking-[0.22em] text-foreground/90 transition-colors hover:text-accent"
             >
               {link.label}
@@ -647,6 +663,13 @@ export default function Showcase({ projects }: { projects: Project[] }) {
         ref={pin}
         className="relative h-screen w-full overflow-hidden bg-background"
       >
+        {/* The page's single top-level heading. Visually hidden — the wordmark
+            "structured ambition" is a stylistic tagline in animated <span>s, so
+            the real <h1> lives here to give the document a proper outline. */}
+        <h1 className="sr-only">
+          {me.name} — {me.role}
+        </h1>
+
         {/* Preloader — "( Loading )" centered. The brackets are invisible slots;
             the real hero brackets get Flip-fitted onto them, so what you see as
             the loading brackets literally expands into the hero brackets. */}
@@ -746,7 +769,7 @@ export default function Showcase({ projects }: { projects: Project[] }) {
         </div>
 
         {/* The photo — geometry driven from the slot out to the frame. */}
-        <div className="sc-photo sc-hero-fade absolute z-20 overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#1c2a3a] via-[#243247] to-[#3a2a1c] will-change-[top,left,width,height]" />
+        <div className="sc-photo sc-hero-fade absolute z-20 overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#1c2a3a] via-[#243247] to-[#3a2a1c]" />
 
         {/* Bio — streams in over the framed photo. */}
         <div className="sc-bio pointer-events-none absolute inset-3 z-30 flex items-center px-[8%]">

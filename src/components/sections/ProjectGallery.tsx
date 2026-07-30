@@ -138,7 +138,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                   <p className="mt-1 text-sm leading-snug text-white/70">
                     {project.tagline}
                   </p>
-                  <p className="mt-3 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-white/40">
+                  <p className="mt-3 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-white/60">
                     {project.tech.join("   •   ")}
                   </p>
                   {repo && (
