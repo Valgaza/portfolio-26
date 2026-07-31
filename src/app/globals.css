@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  /* LIGHT INDUSTRIAL ("Podium") — warm-paper canvas, charcoal ink, a single
-     cool "signal" accent, and hairline rules. The big divergence away from the
-     dark Roshan study. Flip THIS block to retune the whole site. */
-  --background: #f4f3ef; /* warm white paper */
-  --foreground: #1a1a1a; /* charcoal ink */
-  --muted: #57544e; /* warm gray — ~9:1 on the paper, passes AA */
-  /* Single "signal" accent — safety orange. Drives active/hover states, the
+  /* DEEP TEAL — dark teal canvas, near-white ink, muted teal-gray, and a single
+     terracotta-red "signal" accent. Flip THIS block to retune the whole site. */
+  --background: #183e4b; /* deep teal canvas */
+  --foreground: #eaeaea; /* near-white ink */
+  --muted: #8ba0a4; /* muted teal-gray */
+  /* Single "signal" accent — terracotta red. Drives active/hover states, the
      signal-trace line, and key numerals. Change this ONE value to retune the
      accent everywhere. */
-  --accent: #ff5a1f;
-  --on-accent: #1a1a1a; /* ink on top of an accent fill (orange is mid-light) */
-  /* Inverted blocks (a dark "signal" section) flip to these. */
-  --surface-dark: #141414;
-  --on-surface-dark: #f4f3ef;
+  --accent: #d74a49;
+  --on-accent: #eaeaea; /* near-white laid on top of an accent fill */
+  /* Elevated surface — cards, the chat drawer, anything raised off the canvas. */
+  --surface: #1b4552;
 
   /* ── FONT ROLES ──────────────────────────────────────────────────────────
      The site renders three type roles. Each points at ONE loaded family (the
@@ -32,8 +30,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
-  --color-surface-dark: var(--surface-dark);
-  --color-on-surface-dark: var(--on-surface-dark);
+  --color-surface: var(--surface);
   --font-sans: var(--role-body);
   --font-mono: var(--role-mono);
   --font-display: var(--role-display);

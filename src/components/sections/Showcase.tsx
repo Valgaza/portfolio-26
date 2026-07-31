@@ -11,17 +11,9 @@ import { LaunchArrow } from "@/components/ui/LaunchArrow";
  * a stat block on the right. Replaces the old pinned photo-grow → bio-stream →
  * stacking-cards sequence (the most "inherited" part of the old design). The
  * Preloader curtain (see components/ui/Preloader) covers the load; this section
- * plays its own reveal as the curtain lifts (hence the intro delay).
- *
- * The nav is a fixed, always-visible header — real links, keyboard-operable
- * (the old hover-only "||||" menu is gone).
+ * plays its own reveal as the curtain lifts (hence the intro delay). The nav
+ * lives in the global <Navbar /> (mounted in layout), not here.
  */
-const NAV_LINKS = [
-  { label: "Projects", href: "#gallery" },
-  { label: "About Me", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contact", href: "#contact" },
-];
 
 // Placeholder metrics — real numbers from the CV; copy tuned later.
 const STATS = [
@@ -68,29 +60,7 @@ export default function Showcase() {
 
   return (
     <section ref={root} id="showcase" className="relative min-h-svh">
-      {/* Fixed nav — always visible, keyboard-operable. */}
-      <header className="fixed inset-x-0 top-0 z-[120] flex items-center justify-between px-6 py-6 sm:px-12 lg:px-20">
-        <a
-          href="#showcase"
-          className="font-display text-xl tracking-tight"
-          aria-label={`${me.name} — home`}
-        >
-          AP
-        </a>
-        <nav className="flex items-center gap-5 sm:gap-9">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-muted transition-colors hover:text-accent sm:text-[0.8rem]"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-      </header>
-
-      {/* Hero body */}
+      {/* Hero body (the nav is the global <Navbar />, mounted in layout) */}
       <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-32 sm:px-12 lg:px-20">
         <div className="flex flex-1 flex-col justify-center gap-14 lg:flex-row lg:items-end lg:justify-between">
           {/* Left — headline + copy */}

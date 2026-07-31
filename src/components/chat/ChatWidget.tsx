@@ -6,9 +6,9 @@ import { DefaultChatTransport } from "ai";
 import { me } from "@/data/me";
 
 /**
- * ChatWidget — a persistent pill at the bottom of the window ("Ask about
- * Aarya") that opens a docked drawer (right side on desktop, bottom sheet on
- * mobile) with a streaming, grounded chat.
+ * ChatWidget — a persistent pill ("Ask about Aarya") that opens a floating,
+ * Intercom-style chat card (bottom-right on desktop, a bottom sheet on mobile)
+ * with a streaming, grounded chat.
  *
  * The bot answers only from `me.ts` (see `@/lib/chat/knowledge`) via the
  * `/api/chat` route. Until ANTHROPIC_API_KEY is set the route returns a 503 and
@@ -27,6 +27,7 @@ export default function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const asideRef = useRef<HTMLElement>(null);
   const lastFocused = useRef<HTMLElement | null>(null);
+  const first = me.name.split(" ")[0];
 
   const { messages, sendMessage, status, error, stop } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
@@ -41,7 +42,7 @@ export default function ChatWidget() {
     }
   }, [messages, open, status]);
 
-  // Move focus into the drawer on open, restore it to the trigger on close.
+  // Move focus into the card on open, restore it to the trigger on close.
   useEffect(() => {
     if (open) {
       lastFocused.current = document.activeElement as HTMLElement | null;
@@ -55,8 +56,8 @@ export default function ChatWidget() {
     }
   }, [open]);
 
-  // While open: Esc closes, and Tab is trapped inside the drawer so keyboard
-  // focus can't wander to the (inert) page behind it.
+  // While open: Esc closes, and Tab is trapped inside the card so keyboard focus
+  // can't wander to the (inert) page behind it.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -69,14 +70,14 @@ export default function ChatWidget() {
         'button:not([disabled]), [href], input, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (items.length === 0) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
+      const firstEl = items[0];
+      const lastEl = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === firstEl) {
         e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
+        lastEl.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
         e.preventDefault();
-        first.focus();
+        firstEl.focus();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -92,13 +93,12 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ── The pill ────────────────────────────────────────────────────────
-          Fixed, bottom-centre. Hidden while the drawer is open. */}
+      {/* ── The pill — fixed, bottom-centre; hidden while the card is open. ── */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open the AI chat"
-        className={`group fixed bottom-6 left-1/2 z-[190] flex -translate-x-1/2 items-center gap-3 rounded-full border border-black/15 bg-background/80 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-[color,border-color,opacity,transform] duration-300 hover:border-accent/60 hover:text-accent ${
+        className={`group fixed bottom-6 left-1/2 z-[190] flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/15 bg-surface/90 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-[color,border-color,opacity,transform] duration-300 hover:border-accent/60 hover:text-accent ${
           open ? "pointer-events-none translate-y-24 opacity-0" : "opacity-100"
         }`}
       >
@@ -106,45 +106,55 @@ export default function ChatWidget() {
           <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
         </span>
-        Ask about {me.name.split(" ")[0]}
+        Ask about {first}
       </button>
 
-      {/* ── Scrim (click to close) ─────────────────────────────────────────── */}
+      {/* ── Scrim (click to close) — light, so the card reads as a widget. ── */}
       <div
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 z-[195] bg-black/40 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[195] bg-black/30 transition-opacity duration-300 ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         aria-hidden
       />
 
-      {/* ── The drawer ─────────────────────────────────────────────────────── */}
+      {/* ── The floating card ── */}
       <aside
         ref={asideRef}
         role="dialog"
         aria-label={`Chat about ${me.name}`}
         aria-modal="true"
         inert={!open}
-        className={`fixed z-[200] flex flex-col border-black/10 bg-background transition-transform duration-300 ease-out
+        className={`fixed z-[200] flex flex-col overflow-hidden border-white/10 bg-surface shadow-2xl transition-[transform,opacity] duration-300 ease-out
           inset-x-0 bottom-0 h-[85vh] rounded-t-2xl border-t
-          sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[420px] sm:max-w-full sm:rounded-none sm:border-l sm:border-t-0
-          ${open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"}`}
+          sm:inset-x-auto sm:bottom-6 sm:right-6 sm:top-auto sm:h-[600px] sm:max-h-[calc(100vh-3rem)] sm:w-[400px] sm:rounded-2xl sm:border
+          ${
+            open
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-full opacity-0 sm:translate-y-8"
+          }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
-          <div className="flex flex-col">
-            <span className="font-display text-lg leading-none tracking-tight">
-              Ask my portfolio
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display text-base text-on-accent">
+              {first[0]}
             </span>
-            <span className="mt-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted">
-              Grounded on {me.name.split(" ")[0]}&apos;s work
-            </span>
+            <div className="flex flex-col">
+              <span className="font-display text-base leading-none tracking-tight">
+                Ask my portfolio
+              </span>
+              <span className="mt-1.5 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                Grounded on {first}&apos;s work
+              </span>
+            </div>
           </div>
           <button
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close chat"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
           >
             ✕
           </button>
@@ -158,20 +168,33 @@ export default function ChatWidget() {
           className="flex-1 space-y-4 overflow-y-auto px-5 py-6"
         >
           {messages.length === 0 && (
-            <div className="flex flex-col gap-4">
-              <p className="text-sm leading-relaxed text-muted">
-                Ask me anything about {me.name.split(" ")[0]}&apos;s experience,
-                projects, or skills.
-              </p>
+            <div className="flex flex-col gap-6">
+              {/* Greeting hero */}
+              <div>
+                <p className="font-display text-2xl leading-tight tracking-tight">
+                  Hi there <span className="align-middle">👋</span>
+                </p>
+                <p className="mt-2 text-base leading-snug text-muted">
+                  Ask me anything about {first}&apos;s experience, projects, or
+                  skills.
+                </p>
+              </div>
+              {/* Suggested questions, styled like help-article rows */}
               <div className="flex flex-col gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => submit(s)}
-                    className="rounded-lg border border-black/10 px-3 py-2 text-left text-sm text-foreground transition-colors hover:border-accent/50 hover:text-accent"
+                    className="group flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left text-sm text-foreground transition-colors hover:border-accent/50 hover:bg-white/[0.06]"
                   >
-                    {s}
+                    <span>{s}</span>
+                    <span
+                      aria-hidden
+                      className="text-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-accent"
+                    >
+                      ›
+                    </span>
                   </button>
                 ))}
               </div>
@@ -192,7 +215,7 @@ export default function ChatWidget() {
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     isUser
                       ? "bg-accent text-on-accent"
-                      : "border border-black/10 bg-black/[0.03] text-foreground"
+                      : "border border-white/10 bg-white/[0.04] text-foreground"
                   }`}
                 >
                   {text}
@@ -203,7 +226,7 @@ export default function ChatWidget() {
 
           {status === "submitted" && (
             <div className="flex justify-start">
-              <div className="rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
                 <span className="flex gap-1">
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted [animation-delay:-0.3s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted [animation-delay:-0.15s]" />
@@ -214,7 +237,7 @@ export default function ChatWidget() {
           )}
 
           {error && (
-            <p className="text-sm leading-relaxed text-red-400/80">
+            <p className="text-sm leading-relaxed text-red-300">
               Can&apos;t reach the assistant right now. Please try again shortly.
             </p>
           )}
@@ -226,20 +249,20 @@ export default function ChatWidget() {
             e.preventDefault();
             submit(input);
           }}
-          className="flex items-center gap-2 border-t border-black/10 px-4 py-3"
+          className="flex items-center gap-2 border-t border-white/10 px-4 py-3"
         >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            aria-label={`Ask about ${me.name.split(" ")[0]}`}
-            placeholder={`Ask about ${me.name.split(" ")[0]}…`}
-            className="flex-1 rounded-full border border-black/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
+            aria-label={`Ask about ${first}`}
+            placeholder={`Ask about ${first}…`}
+            className="flex-1 rounded-full border border-white/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
           />
           {busy ? (
             <button
               type="button"
               onClick={() => stop()}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
               aria-label="Stop generating"
             >
               ■
@@ -248,7 +271,7 @@ export default function ChatWidget() {
             <button
               type="submit"
               disabled={!input.trim()}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-on-accent transition-opacity disabled:opacity-40"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent transition-opacity disabled:opacity-40"
               aria-label="Send message"
             >
               ↑

@@ -88,7 +88,7 @@ export default function Skills() {
       </div>
 
       {/* Category rows */}
-      <div className="flex flex-col divide-y divide-black/10">
+      <div className="flex flex-col divide-y divide-white/10">
         {me.skills.map((group) => (
           <div
             key={group.category}
