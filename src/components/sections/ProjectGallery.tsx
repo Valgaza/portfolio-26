@@ -77,7 +77,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
         <p className="reveal-fade mb-4 font-mono text-xs uppercase tracking-[0.25em] text-muted">
           Build log
         </p>
-        <h2 className="text-3xl font-medium leading-[1.15] tracking-tight sm:text-4xl lg:text-5xl">
+        <h2 className="font-display text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-5xl">
           <MaskLine>More of what I&apos;ve built.</MaskLine>
         </h2>
       </div>
@@ -140,7 +140,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-2xl font-medium leading-tight text-white">
+                  <h3 className="font-display text-2xl leading-tight text-white">
                     <MaskRevealUp key={`t-${isActive}`}>
                       {project.title}
                     </MaskRevealUp>
@@ -210,7 +210,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                     </span>
                   )}
                 </div>
-                <h3 className="text-xl font-medium text-foreground">
+                <h3 className="font-display text-xl text-foreground">
                   {project.title}
                 </h3>
                 <p className="mt-1 text-sm leading-snug text-muted">
