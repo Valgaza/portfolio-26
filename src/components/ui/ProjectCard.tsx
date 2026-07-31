@@ -8,7 +8,7 @@ import { type Project } from "@/data/me";
  */
 export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="group relative flex h-full flex-col gap-5 rounded-2xl border border-white/10 bg-white/[0.02] p-7 transition-colors duration-300 hover:border-accent/50 hover:bg-white/[0.04]">
+    <article className="group relative flex h-full flex-col gap-5 rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-7 transition-colors duration-300 hover:border-accent/50 hover:bg-foreground/[0.04]">
       <div className="flex flex-col gap-2">
         <h3 className="text-2xl font-semibold tracking-tight">
           {project.title}
@@ -24,7 +24,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         {project.tech.map((t) => (
           <li
             key={t}
-            className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-muted"
+            className="rounded-full border border-foreground/10 px-3 py-1 font-mono text-xs text-muted"
           >
             {t}
           </li>

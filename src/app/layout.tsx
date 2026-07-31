@@ -40,8 +40,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontVars} h-full antialiased`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fontVars} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
+        {/* Set the saved theme before paint so there's no flash of the wrong
+            mode. Default is dark; only "light" is stored + applied here. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}`,
+          }}
+        />
         <Preloader />
         <ParticleBackground />
         <Navbar />

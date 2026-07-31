@@ -71,7 +71,7 @@ export default function Skills() {
     <section ref={root} id="skills" className="relative">
       <div
         ref={pin}
-        className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
+        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 lg:px-20"
       >
       {/* Header */}
       <div className="mb-20 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -90,7 +90,7 @@ export default function Skills() {
       </div>
 
       {/* Category rows */}
-      <div className="flex flex-col divide-y divide-white/10">
+      <div className="flex flex-col divide-y divide-foreground/10">
         {me.skills.map((group) => (
           <div
             key={group.category}

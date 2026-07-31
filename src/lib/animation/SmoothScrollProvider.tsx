@@ -36,6 +36,8 @@ export default function SmoothScrollProvider({
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis();
+    // Expose the instance so the navbar / logo can smooth-scroll to sections.
+    (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
     // (1) Lenis → ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);

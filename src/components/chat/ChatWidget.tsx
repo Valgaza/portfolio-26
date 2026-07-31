@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { motion } from "motion/react";
 import { me } from "@/data/me";
 import SiriOrb from "@/components/ui/SiriOrb";
 
@@ -95,32 +94,32 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ── The morph-dock trigger — fixed, bottom-centre; a shimmering SiriOrb
-          + label. Hidden while the card is open. ── */}
+      {/* ── The chat FAB — bottom-right; an enlarged, pulsating SiriOrb that
+          expands on hover/focus into a pill. Hidden while the card is open. ── */}
       <div
-        className={`fixed bottom-6 left-1/2 z-[190] -translate-x-1/2 transition-[opacity,transform] duration-300 ${
+        className={`fixed bottom-6 right-6 z-[190] transition-[opacity,transform] duration-300 ${
           open ? "pointer-events-none translate-y-24 opacity-0" : "opacity-100"
         }`}
       >
-        <motion.button
+        <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Open the AI chat"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{
-            type: "spring",
-            stiffness: 550,
-            damping: 45,
-            mass: 0.7,
-          }}
-          className="group flex items-center gap-2.5 rounded-full border border-white/15 bg-surface/90 px-4 py-2 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur"
+          aria-label="Open the chat — talk to my digital clone"
+          className="group flex items-center rounded-full border border-foreground/15 bg-surface/90 p-2 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.7)] backdrop-blur transition-transform duration-200 active:scale-[0.97]"
         >
-          <SiriOrb size={24} />
-          <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-foreground transition-colors group-hover:text-accent">
-            Talk to me right now
+          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
+            <span className="absolute inset-0 rounded-full bg-accent/25 motion-safe:animate-ping" />
+            <SiriOrb size={44} />
           </span>
-        </motion.button>
+          {/* Label expands from 0 → content width on hover (grid-cols trick). */}
+          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 ease-out group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]">
+            <span className="overflow-hidden">
+              <span className="block whitespace-nowrap pl-3 pr-2 font-mono text-xs uppercase tracking-[0.2em] text-foreground transition-colors group-hover:text-accent">
+                Talk to my digital clone
+              </span>
+            </span>
+          </span>
+        </button>
       </div>
 
       {/* ── Scrim (click to close) — light, so the card reads as a widget. ── */}
@@ -139,7 +138,7 @@ export default function ChatWidget() {
         aria-label={`Chat about ${me.name}`}
         aria-modal="true"
         inert={!open}
-        className={`fixed z-[200] flex flex-col overflow-hidden border-white/10 bg-surface shadow-2xl transition-[transform,opacity] duration-300 ease-out
+        className={`fixed z-[200] flex flex-col overflow-hidden border-foreground/10 bg-surface shadow-2xl transition-[transform,opacity] duration-300 ease-out
           inset-x-0 bottom-0 h-[85vh] rounded-t-2xl border-t
           sm:inset-x-auto sm:bottom-6 sm:right-6 sm:top-auto sm:h-[600px] sm:max-h-[calc(100vh-3rem)] sm:w-[400px] sm:rounded-2xl sm:border
           ${
@@ -149,7 +148,7 @@ export default function ChatWidget() {
           }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-foreground/10 px-5 py-4">
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display text-base text-on-accent">
               {first[0]}
@@ -168,7 +167,7 @@ export default function ChatWidget() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close chat"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
           >
             ✕
           </button>
@@ -200,7 +199,7 @@ export default function ChatWidget() {
                     key={s}
                     type="button"
                     onClick={() => submit(s)}
-                    className="group flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left text-sm text-foreground transition-colors hover:border-accent/50 hover:bg-white/[0.06]"
+                    className="group flex items-center justify-between gap-3 rounded-xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3 text-left text-sm text-foreground transition-colors hover:border-accent/50 hover:bg-foreground/[0.06]"
                   >
                     <span>{s}</span>
                     <span
@@ -229,7 +228,7 @@ export default function ChatWidget() {
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     isUser
                       ? "bg-accent text-on-accent"
-                      : "border border-white/10 bg-white/[0.04] text-foreground"
+                      : "border border-foreground/10 bg-foreground/[0.04] text-foreground"
                   }`}
                 >
                   {text}
@@ -240,7 +239,7 @@ export default function ChatWidget() {
 
           {status === "submitted" && (
             <div className="flex justify-start">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+              <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.04] px-4 py-3">
                 <span className="flex gap-1">
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted [animation-delay:-0.3s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted [animation-delay:-0.15s]" />
@@ -263,20 +262,20 @@ export default function ChatWidget() {
             e.preventDefault();
             submit(input);
           }}
-          className="flex items-center gap-2 border-t border-white/10 px-4 py-3"
+          className="flex items-center gap-2 border-t border-foreground/10 px-4 py-3"
         >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             aria-label={`Ask about ${first}`}
             placeholder={`Ask about ${first}…`}
-            className="flex-1 rounded-full border border-white/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
+            className="flex-1 rounded-full border border-foreground/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
           />
           {busy ? (
             <button
               type="button"
               onClick={() => stop()}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-foreground/15 text-muted transition-colors hover:border-accent/60 hover:text-accent"
               aria-label="Stop generating"
             >
               ■

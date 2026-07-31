@@ -70,7 +70,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
     <section ref={root} id="gallery" className="relative">
       <div
         ref={pin}
-        className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
+        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 lg:px-20"
       >
       {/* Header — same masked-line / fade vocabulary as the rest of the site. */}
       <div className="mb-14 max-w-3xl">
@@ -97,7 +97,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
               }}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
-              className="relative h-[24rem] flex-none cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02]"
+              className="relative h-[24rem] flex-none cursor-pointer overflow-hidden rounded-3xl border border-foreground/10 bg-foreground/[0.02]"
             >
               {/* Image (or a graceful fallback, mirroring Showcase). */}
               {project.image ? (
@@ -108,8 +108,8 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-white/[0.06] to-white/[0.01]">
-                  <span className="font-display text-4xl uppercase text-white/[0.08]">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01]">
+                  <span className="font-display text-4xl uppercase text-foreground/[0.08]">
                     {project.title}
                   </span>
                 </div>
@@ -181,7 +181,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
           return (
             <div
               key={project.slug}
-              className="reveal-fade overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]"
+              className="reveal-fade overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/[0.02]"
             >
               <div className="relative aspect-[16/10] w-full">
                 {project.image ? (
@@ -192,8 +192,8 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-white/[0.06] to-white/[0.01]">
-                    <span className="font-display text-3xl uppercase text-white/[0.08]">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01]">
+                    <span className="font-display text-3xl uppercase text-foreground/[0.08]">
                       {project.title}
                     </span>
                   </div>
@@ -205,7 +205,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                     {project.category}
                   </p>
                   {project.status && STATUS_LABEL[project.status] && (
-                    <span className="rounded-full border border-white/25 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.15em] text-muted">
+                    <span className="rounded-full border border-foreground/25 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.15em] text-muted">
                       {STATUS_LABEL[project.status]}
                     </span>
                   )}

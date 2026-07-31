@@ -24,6 +24,19 @@
   --role-mono: var(--font-martian);
 }
 
+/* LIGHT MODE — the same teal/red family on a warm cream base (no bright
+   whites). Toggled via data-theme="light" on <html> (set before paint by the
+   inline script in layout, so there's no flash). Component hairlines are
+   foreground-based (border-foreground/10 …) so they invert with the theme. */
+[data-theme="light"] {
+  --background: #ece6d9; /* warm cream */
+  --foreground: #183e4b; /* deep teal ink */
+  --muted: #566a70; /* darker teal-gray — readable on cream */
+  --accent: #d74a49; /* same terracotta-red accent */
+  --on-accent: #f4efe6; /* cream laid on an accent fill */
+  --surface: #f4efe4; /* lighter cream — elevated surfaces */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

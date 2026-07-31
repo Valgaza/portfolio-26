@@ -117,7 +117,7 @@ export default function Experience() {
       >
         <div
           ref={layer}
-          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:py-[14vh] lg:px-20"
+          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:pb-16 md:pt-24 lg:px-20"
         >
           {/* Header */}
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -162,7 +162,7 @@ export default function Experience() {
 
               {/* Row 2 — rail (track + accent fill + dot) with nodes on it. */}
               <div className="relative col-span-full flex h-9 items-center">
-                <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/12" />
+                <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-foreground/15" />
                 <div
                   className="exp-fill absolute left-0 top-1/2 h-px -translate-y-1/2 bg-accent"
                   style={{ width: 0 }}
