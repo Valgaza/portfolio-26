@@ -20,7 +20,7 @@ import {
   siRedis,
 } from "simple-icons";
 import { me } from "@/data/me";
-import { MaskLine, useScrollReveal } from "@/lib/animation/reveal";
+import { MaskLine, useScrollReveal, usePinSection } from "@/lib/animation/reveal";
 
 /**
  * Skills — "My Stack". Two-column rhythm per category (big Anton label left,
@@ -63,14 +63,16 @@ const norm = (s: string) =>
 
 export default function Skills() {
   const root = useRef<HTMLElement>(null);
+  const pin = useRef<HTMLDivElement>(null);
   useScrollReveal(root);
+  usePinSection(root, pin, { dwell: 0.6 });
 
   return (
-    <section
-      ref={root}
-      id="skills"
-      className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
-    >
+    <section ref={root} id="skills" className="relative">
+      <div
+        ref={pin}
+        className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
+      >
       {/* Header */}
       <div className="mb-20 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-5">
@@ -125,6 +127,7 @@ export default function Skills() {
             </ul>
           </div>
         ))}
+      </div>
       </div>
     </section>
   );

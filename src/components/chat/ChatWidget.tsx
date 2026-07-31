@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { motion } from "motion/react";
 import { me } from "@/data/me";
+import SiriOrb from "@/components/ui/SiriOrb";
 
 /**
  * ChatWidget — a persistent pill ("Ask about Aarya") that opens a floating,
@@ -93,21 +95,33 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ── The pill — fixed, bottom-centre; hidden while the card is open. ── */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Open the AI chat"
-        className={`group fixed bottom-6 left-1/2 z-[190] flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/15 bg-surface/90 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-[color,border-color,opacity,transform] duration-300 hover:border-accent/60 hover:text-accent ${
+      {/* ── The morph-dock trigger — fixed, bottom-centre; a shimmering SiriOrb
+          + label. Hidden while the card is open. ── */}
+      <div
+        className={`fixed bottom-6 left-1/2 z-[190] -translate-x-1/2 transition-[opacity,transform] duration-300 ${
           open ? "pointer-events-none translate-y-24 opacity-0" : "opacity-100"
         }`}
       >
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-        </span>
-        Ask about {first}
-      </button>
+        <motion.button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open the AI chat"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{
+            type: "spring",
+            stiffness: 550,
+            damping: 45,
+            mass: 0.7,
+          }}
+          className="group flex items-center gap-2.5 rounded-full border border-white/15 bg-surface/90 px-4 py-2 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] backdrop-blur"
+        >
+          <SiriOrb size={24} />
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-foreground transition-colors group-hover:text-accent">
+            Talk to me right now
+          </span>
+        </motion.button>
+      </div>
 
       {/* ── Scrim (click to close) — light, so the card reads as a widget. ── */}
       <div

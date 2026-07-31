@@ -19,8 +19,8 @@
      --font-* vars come from next/font in layout.tsx). The tweaks panel rewrites
      these three pointers live to try different pairings; to bake a choice in,
      just change the default here. */
-  --role-display: var(--font-anton);
-  --role-body: var(--font-geist);
+  --role-display: var(--font-fraunces);
+  --role-body: var(--font-hanken);
   --role-mono: var(--font-martian);
 }
 
@@ -83,5 +83,59 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .exp-fill {
     width: 100% !important;
+  }
+}
+
+/* SiriOrb — a shimmering gradient orb for the chat dock. Two spinning conic
+   layers, blurred and clipped to a circle. Sized inline by the component. */
+.siri-orb {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--surface);
+}
+.siri-orb::before,
+.siri-orb::after {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  border-radius: 9999px;
+  animation: siri-spin 5s linear infinite;
+}
+.siri-orb::before {
+  background: conic-gradient(
+    from 0deg,
+    var(--accent),
+    #8ba0a4,
+    #eaeaea,
+    var(--accent)
+  );
+  filter: blur(3px);
+}
+.siri-orb::after {
+  background: conic-gradient(
+    from 140deg,
+    var(--accent),
+    transparent,
+    #8ba0a4,
+    transparent,
+    var(--accent)
+  );
+  opacity: 0.7;
+  filter: blur(2px);
+  animation-duration: 7s;
+  animation-direction: reverse;
+}
+@keyframes siri-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .siri-orb::before,
+  .siri-orb::after {
+    animation: none;
   }
 }

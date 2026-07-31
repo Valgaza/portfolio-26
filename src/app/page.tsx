@@ -22,8 +22,12 @@ export default function Home() {
       <Experience />
       <ProjectGallery projects={projects} />
       <Skills />
-      <Contact />
-      <Footer />
+      {/* Closing CTA + footer share the final screen (Contact grows to fill the
+          space above the footer, which sits at the bottom). */}
+      <div className="flex min-h-svh flex-col">
+        <Contact />
+        <Footer />
+      </div>
       <ChatWidget />
     </main>
   );

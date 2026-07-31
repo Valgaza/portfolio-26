@@ -68,12 +68,15 @@ export default function Experience() {
 
         // ── draw the timeline (0 → ~0.66), spread across the scrub ───────────
         const spread = 0.6; // where the last node lands
+        // The red fill draws the FULL grey-track width (a bit past the last
+        // node) across almost the whole pin, finishing just before release.
+        const drawEnd = 0.92;
         tl.to(
           fill,
           {
-            width: `${((n - 1) / n) * 100}%`,
+            width: "100%",
             ease: "none",
-            duration: spread + 0.06,
+            duration: drawEnd,
           },
           0,
         );
@@ -96,8 +99,8 @@ export default function Experience() {
           );
         }
 
-        // ── hold on the fully-drawn timeline, then the pin releases ──────────
-        tl.to({}, { duration: 0.34 }, 0.72);
+        // ── the instant the fill reaches the end, a tiny settle then release ─
+        tl.to({}, { duration: 0.06 }, drawEnd);
       },
     );
 

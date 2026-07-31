@@ -3,8 +3,14 @@
 import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import type { Project } from "@/data/me";
-import { MaskLine, useScrollReveal, useIsoLayoutEffect } from "@/lib/animation/reveal";
+import {
+  MaskLine,
+  useScrollReveal,
+  useIsoLayoutEffect,
+  usePinSection,
+} from "@/lib/animation/reveal";
 import { LaunchArrow } from "@/components/ui/LaunchArrow";
+import MaskRevealUp from "@/components/ui/MaskRevealUp";
 
 /**
  * ProjectGallery — the "more builds" section: a horizontal hover-expand
@@ -38,7 +44,9 @@ const STATUS_LABEL: Record<string, string> = {
 
 export default function ProjectGallery({ projects }: { projects: Project[] }) {
   const root = useRef<HTMLElement>(null);
+  const pin = useRef<HTMLDivElement>(null);
   useScrollReveal(root);
+  usePinSection(root, pin, { dwell: 0.8 });
 
   // Start with the first panel expanded so the section reads well before any
   // hover (and on touch, before the first tap).
@@ -59,11 +67,11 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
   }, [active]);
 
   return (
-    <section
-      ref={root}
-      id="gallery"
-      className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
-    >
+    <section ref={root} id="gallery" className="relative">
+      <div
+        ref={pin}
+        className="flex min-h-screen flex-col justify-center px-6 py-32 sm:px-12 lg:px-20"
+      >
       {/* Header — same masked-line / fade vocabulary as the rest of the site. */}
       <div className="mb-14 max-w-3xl">
         <p className="reveal-fade mb-4 font-mono text-xs uppercase tracking-[0.25em] text-muted">
@@ -133,10 +141,14 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                     )}
                   </div>
                   <h3 className="text-2xl font-medium leading-tight text-white">
-                    {project.title}
+                    <MaskRevealUp key={`t-${isActive}`}>
+                      {project.title}
+                    </MaskRevealUp>
                   </h3>
                   <p className="mt-1 text-sm leading-snug text-white/70">
-                    {project.tagline}
+                    <MaskRevealUp key={`d-${isActive}`} delay={90}>
+                      {project.tagline}
+                    </MaskRevealUp>
                   </p>
                   <p className="mt-3 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-white/60">
                     {project.tech.join("   •   ")}
@@ -219,6 +231,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

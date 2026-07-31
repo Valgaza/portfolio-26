@@ -51,6 +51,40 @@ export function MaskLine({
  * Everything is scoped with `gsap.context(scope)` so selectors stay local to
  * the section and `ctx.revert()` tears it all down on unmount.
  */
+/**
+ * Pin a section in place for a short scroll "dwell" before releasing to the next
+ * one. `root` is the section (the ScrollTrigger trigger + spacer); `pin` is the
+ * inner box actually held fixed. Desktop + motion only — on mobile / reduced
+ * motion the section just flows normally. `dwell` is in viewport-heights.
+ */
+export function usePinSection(
+  root: RefObject<HTMLElement | null>,
+  pin: RefObject<HTMLElement | null>,
+  { dwell = 0.7 }: { dwell?: number } = {},
+) {
+  useIsoLayoutEffect(() => {
+    if (!root.current || !pin.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const mm = gsap.matchMedia();
+    mm.add(
+      "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const st = ScrollTrigger.create({
+          trigger: root.current,
+          start: "top top",
+          end: () => "+=" + window.innerHeight * dwell,
+          pin: pin.current,
+          invalidateOnRefresh: true,
+        });
+        return () => st.kill();
+      },
+    );
+
+    return () => mm.revert();
+  }, [root, pin, dwell]);
+}
+
 export function useScrollReveal(
   scope: RefObject<HTMLElement | null>,
   {

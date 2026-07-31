@@ -35,7 +35,7 @@ export default function Footer() {
   const github = me.socials.find((s) => s.label === "GitHub")?.href ?? "#";
 
   return (
-    <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-24 sm:px-12 lg:px-20">
+    <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-16 sm:px-12 lg:px-20">
       <div className="h-px w-full bg-white/15" />
 
       <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-3">

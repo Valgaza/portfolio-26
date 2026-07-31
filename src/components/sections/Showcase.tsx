@@ -69,7 +69,7 @@ export default function Showcase() {
               {me.location} · Available for AI/ML roles
             </p>
 
-            <h1 className="font-display text-[clamp(2.75rem,9vw,8rem)] uppercase leading-[0.88] tracking-tight">
+            <h1 className="font-display text-[clamp(2.25rem,7vw,6rem)] uppercase leading-[0.9] tracking-tight">
               <span className="block overflow-hidden pb-[0.04em]">
                 <span className="hero-line block text-accent">AI / ML</span>
               </span>
