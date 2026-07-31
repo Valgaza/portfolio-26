@@ -19,7 +19,7 @@
      --font-* vars come from next/font in layout.tsx). The tweaks panel rewrites
      these three pointers live to try different pairings; to bake a choice in,
      just change the default here. */
-  --role-display: var(--font-fraunces);
+  --role-display: var(--font-kovanov);
   --role-body: var(--font-hanken);
   --role-mono: var(--font-martian);
 }
