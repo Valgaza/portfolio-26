@@ -4,7 +4,7 @@
  * (`.siri-orb`); this just sizes the element. Reduced-motion safe (the spin is
  * disabled in CSS). Adapted from the smoothui SiriOrb referenced in the pill.
  */
-export default function SiriOrb({ size = 24 }: { size?: number }) {
+export default function SiriOrb({ size = 40 }: { size?: number }) {
   return (
     <span className="siri-orb" style={{ width: size, height: size }} aria-hidden />
   );

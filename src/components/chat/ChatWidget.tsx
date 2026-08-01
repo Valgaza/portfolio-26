@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { me } from "@/data/me";
@@ -11,16 +12,21 @@ import SiriOrb from "@/components/ui/SiriOrb";
  * Intercom-style chat card (bottom-right on desktop, a bottom sheet on mobile)
  * with a streaming, grounded chat.
  *
- * The bot answers only from `me.ts` (see `@/lib/chat/knowledge`) via the
- * `/api/chat` route. Until ANTHROPIC_API_KEY is set the route returns a 503 and
- * we surface that as a friendly inline message.
+ * The bot is grounded on the static system prompt in `@/lib/chat/knowledge`
+ * via the `/api/chat` route. Until OPENAI_API_KEY is set the route returns a
+ * 503 and we surface that as a friendly inline message.
  */
 
 const SUGGESTIONS = [
-  "What did Aarya do at PwC?",
+  "What did you do at PwC?",
   "Tell me about Indexial",
-  "What's his strongest stack?",
+  "What's your strongest stack?",
 ];
+
+// The FAB orb's rendered size (px). This — not SiriOrb.tsx's default — is the
+// real knob: it drives both the orb and the pulse ring that wraps it, so they
+// always match. Bump it to grow the whole FAB.
+const ORB_SIZE = 48;
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -29,6 +35,7 @@ export default function ChatWidget() {
   const asideRef = useRef<HTMLElement>(null);
   const lastFocused = useRef<HTMLElement | null>(null);
   const first = me.name.split(" ")[0];
+  const reduce = useReducedMotion();
 
   const { messages, sendMessage, status, error, stop } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
@@ -94,33 +101,47 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ── The chat FAB — bottom-right; an enlarged, pulsating SiriOrb that
-          expands on hover/focus into a pill. Hidden while the card is open. ── */}
-      <div
-        className={`fixed bottom-6 right-6 z-[190] transition-[opacity,transform] duration-300 ${
-          open ? "pointer-events-none translate-y-24 opacity-0" : "opacity-100"
-        }`}
+      {/* ── The chat FAB — a bare, pulsating SiriOrb pinned to the blob corner;
+          on hover a pill slides out to its LEFT. Springs away when the card
+          opens (the card grows from this same corner). ── */}
+      <motion.div
+        className="fixed bottom-17 right-20 z-[190]"
+        initial={false}
+        animate={
+          open ? { opacity: 0, scale: reduce ? 1 : 0.5 } : { opacity: 1, scale: 1 }
+        }
+        transition={
+          reduce ? { duration: 0.15 } : { type: "spring", duration: 0.35, bounce: 0 }
+        }
+        style={{ pointerEvents: open ? "none" : "auto" }}
       >
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open the chat — talk to my digital clone"
-          className="group flex items-center rounded-full border border-foreground/15 bg-surface/90 p-2 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.7)] backdrop-blur transition-transform duration-200 active:scale-[0.97]"
+          className="group flex items-center transition-transform duration-200 active:scale-[0.96]"
         >
-          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-            <span className="absolute inset-0 rounded-full bg-accent/25 motion-safe:animate-ping" />
-            <SiriOrb size={44} />
-          </span>
-          {/* Label expands from 0 → content width on hover (grid-cols trick). */}
+          {/* Label pill — LEFT of the orb, expands on hover/focus (grid 0fr→1fr).
+              It keeps its own surface pill for legibility now that the orb is bare. */}
           <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 ease-out group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]">
             <span className="overflow-hidden">
-              <span className="block whitespace-nowrap pl-3 pr-2 font-mono text-xs uppercase tracking-[0.2em] text-foreground transition-colors group-hover:text-accent">
+              <span className="mr-3 block whitespace-nowrap rounded-full border border-foreground/15 bg-surface px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-foreground transition-colors group-hover:text-accent">
                 Talk to my digital clone
               </span>
             </span>
           </span>
+          {/* Bare SiriOrb + pulse — no surrounding surface ring. Size + the
+              pulse ring both come from ORB_SIZE so they stay in lockstep. The
+              ping is slowed from Tailwind's default 1s to a calmer 2.6s. */}
+          <span
+            className="relative flex shrink-0 items-center justify-center"
+            style={{ width: ORB_SIZE, height: ORB_SIZE }}
+          >
+            <span className="absolute inset-0 rounded-full bg-accent/25 [animation-duration:2.6s] motion-safe:animate-ping" />
+            <SiriOrb size={ORB_SIZE} />
+          </span>
         </button>
-      </div>
+      </motion.div>
 
       {/* ── Scrim (click to close) — light, so the card reads as a widget. ── */}
       <div
@@ -131,21 +152,28 @@ export default function ChatWidget() {
         aria-hidden
       />
 
-      {/* ── The floating card ── */}
-      <aside
+      {/* ── The floating card — grows out of the blob's bottom-right corner
+          (matching sm:bottom/right + transform-origin) with a spring. ── */}
+      <motion.aside
         ref={asideRef}
         role="dialog"
         aria-label={`Chat about ${me.name}`}
         aria-modal="true"
         inert={!open}
-        className={`fixed z-[200] flex flex-col overflow-hidden border-foreground/10 bg-surface shadow-2xl transition-[transform,opacity] duration-300 ease-out
+        initial={false}
+        animate={
+          open
+            ? { opacity: 1, scale: 1, y: 0 }
+            : { opacity: 0, scale: reduce ? 1 : 0.92, y: reduce ? 0 : 12 }
+        }
+        transition={
+          reduce ? { duration: 0.15 } : { type: "spring", duration: 0.45, bounce: 0 }
+        }
+        style={{ transformOrigin: "bottom right" }}
+        className={`fixed z-[200] flex flex-col overflow-hidden border-foreground/10 bg-surface shadow-2xl
           inset-x-0 bottom-0 h-[85vh] rounded-t-2xl border-t
-          sm:inset-x-auto sm:bottom-6 sm:right-6 sm:top-auto sm:h-[600px] sm:max-h-[calc(100vh-3rem)] sm:w-[400px] sm:rounded-2xl sm:border
-          ${
-            open
-              ? "translate-y-0 opacity-100"
-              : "pointer-events-none translate-y-full opacity-0 sm:translate-y-8"
-          }`}
+          sm:inset-x-auto sm:bottom-17 sm:right-20 sm:top-auto sm:h-[680px] sm:max-h-[calc(100vh-3rem)] sm:w-[440px] sm:rounded-2xl sm:border
+          ${open ? "" : "pointer-events-none"}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between gap-3 border-b border-foreground/10 px-5 py-4">
@@ -155,11 +183,11 @@ export default function ChatWidget() {
             </span>
             <div className="flex flex-col">
               <span className="font-display text-base leading-none tracking-tight">
-                Ask my portfolio
+                {first}&apos;s digital clone
               </span>
               <span className="mt-1.5 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                Grounded on {first}&apos;s work
+                Always available
               </span>
             </div>
           </div>
@@ -185,11 +213,10 @@ export default function ChatWidget() {
               {/* Greeting hero */}
               <div>
                 <p className="font-display text-2xl leading-tight tracking-tight">
-                  Hi there <span className="align-middle">👋</span>
+                  Hi, I&apos;m {first} <span className="align-middle">👋</span>
                 </p>
                 <p className="mt-2 text-base leading-snug text-muted">
-                  Ask me anything about {first}&apos;s experience, projects, or
-                  skills.
+                  Ask me anything about my experience, projects, or skills.
                 </p>
               </div>
               {/* Suggested questions, styled like help-article rows */}
@@ -220,12 +247,19 @@ export default function ChatWidget() {
               .join("");
             const isUser = m.role === "user";
             return (
-              <div
+              <motion.div
                 key={m.id}
+                initial={{ opacity: 0, y: reduce ? 0 : 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  reduce
+                    ? { duration: 0.15 }
+                    : { type: "spring", duration: 0.4, bounce: 0 }
+                }
                 className={`flex ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                  className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     isUser
                       ? "bg-accent text-on-accent"
                       : "border border-foreground/10 bg-foreground/[0.04] text-foreground"
@@ -233,7 +267,7 @@ export default function ChatWidget() {
                 >
                   {text}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
 
@@ -267,8 +301,8 @@ export default function ChatWidget() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            aria-label={`Ask about ${first}`}
-            placeholder={`Ask about ${first}…`}
+            aria-label="Ask me anything"
+            placeholder="Ask me anything…"
             className="flex-1 rounded-full border border-foreground/15 bg-transparent px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
           />
           {busy ? (
@@ -291,7 +325,7 @@ export default function ChatWidget() {
             </button>
           )}
         </form>
-      </aside>
+      </motion.aside>
     </>
   );
 }
