@@ -27,12 +27,26 @@ function useISTClock() {
 }
 
 const LINK_CLASS =
-  "font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted transition-colors hover:text-accent";
+  "cursor-pointer font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted transition-colors hover:text-accent";
+
+// Smooth-scroll to the very top via Lenis (the same instance the navbar uses,
+// exposed on window). Falls back to native smooth scroll if Lenis isn't ready.
+function scrollToTop() {
+  const lenis = (
+    window as unknown as {
+      lenis?: { scrollTo: (t: number, o?: { duration?: number }) => void };
+    }
+  ).lenis;
+  if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+  else window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 export default function Footer() {
   const time = useISTClock();
   const linkedIn = me.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
   const github = me.socials.find((s) => s.label === "GitHub")?.href ?? "#";
+  const instagram =
+    me.socials.find((s) => s.label === "Instagram")?.href ?? "#";
 
   return (
     <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-16 sm:px-12 lg:px-20">
@@ -60,32 +74,46 @@ export default function Footer() {
           >
             LinkedIn
           </a>
-        </div>
-
-        {/* Utilities */}
-        <div className="flex flex-col gap-3">
-          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] tabular-nums text-muted">
-            IST — {time ?? "--:--:--"}
-          </span>
-          <a href="#showcase" className={LINK_CLASS}>
-            Back to top
+          <a
+            href={instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={LINK_CLASS}
+          >
+            Instagram
           </a>
         </div>
 
-        {/* Attribution — this is a design-to-code STUDY of someone else's work,
-            so the original designer is credited here, prominently. */}
+        {/* Back to top — centred */}
+        <div className="flex flex-col gap-3 sm:items-center">
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className={`${LINK_CLASS} text-center`}
+          >
+            Back to top
+          </button>
+        </div>
+
+        {/* Personal sign-off + local time */}
         <div className="flex flex-col gap-3 sm:text-right">
-          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] text-muted">
-            Design by Roshan Sahu &amp; Rekhchand
+          <span className="font-mono text-[0.8rem] uppercase tracking-[0.35em] text-foreground">
+            No regrets
           </span>
-          <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted">
-            Design-to-code study · rebuilt for learning
+          <span className="font-mono text-[0.8rem] uppercase tracking-[0.15em] tabular-nums text-muted">
+            IST — {time ?? "--:--:--"}
           </span>
         </div>
       </div>
 
-      {/* Oversized name wordmark */}
-      <div className="mt-8 font-display text-[13vw] uppercase leading-[0.8] tracking-tight text-foreground">
+      {/* Oversized name wordmark — decorative. Its glyphs overflow this box
+          upward (leading-[0.8]) and overlap the links row above; since it paints
+          on top, it would otherwise steal hover/selection from those links. It's
+          purely decorative, so make it inert to pointer + selection. */}
+      <div
+        aria-hidden
+        className="pointer-events-none mt-8 select-none font-display text-[13vw] uppercase leading-[0.8] tracking-tight text-foreground"
+      >
         {me.name}
       </div>
     </footer>

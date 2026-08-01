@@ -61,6 +61,36 @@ const norm = (s: string) =>
     .replace(/\s*\(.*?\)\s*/g, " ")
     .trim();
 
+// One row of tools: each is an optional monochrome brand mark + its name. Marks
+// render in currentColor (ink → accent on hover) so the row stays in-palette.
+// Shared by the flat categories and the Machine-Learning sub-rows.
+function SkillItems({ items }: { items: string[] }) {
+  return (
+    <ul className="flex flex-wrap gap-x-8 gap-y-4">
+      {items.map((item) => {
+        const icon = LOGOS[norm(item)];
+        return (
+          <li key={item} className="group flex items-center gap-2.5 leading-none">
+            {icon ? (
+              <svg
+                role="img"
+                aria-hidden
+                viewBox="0 0 24 24"
+                className="h-[1.15em] w-[1.15em] shrink-0 fill-current text-muted transition-colors duration-200 group-hover:text-accent"
+              >
+                <path d={icon.path} />
+              </svg>
+            ) : null}
+            <span className="text-xl text-foreground transition-colors duration-200 group-hover:text-accent">
+              {item}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export default function Skills() {
   const root = useRef<HTMLElement>(null);
   const pin = useRef<HTMLDivElement>(null);
@@ -100,31 +130,23 @@ export default function Skills() {
               {group.category}
             </h3>
 
-            <ul className="flex flex-wrap gap-x-8 gap-y-4 sm:col-span-8">
-              {group.items.map((item) => {
-                const icon = LOGOS[norm(item)];
-                return (
-                  <li
-                    key={item}
-                    className="group flex items-center gap-2.5 leading-none"
-                  >
-                    {icon ? (
-                      <svg
-                        role="img"
-                        aria-hidden
-                        viewBox="0 0 24 24"
-                        className="h-[1.15em] w-[1.15em] shrink-0 fill-current text-muted transition-colors duration-200 group-hover:text-accent"
-                      >
-                        <path d={icon.path} />
-                      </svg>
-                    ) : null}
-                    <span className="text-xl text-foreground transition-colors duration-200 group-hover:text-accent">
-                      {item}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+            <div className="sm:col-span-8">
+              {group.subgroups ? (
+                // Nested category (Machine Learning): a stack of labelled sub-rows.
+                <div className="flex flex-col gap-7">
+                  {group.subgroups.map((sg) => (
+                    <div key={sg.label} className="flex flex-col gap-3.5">
+                      <p className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+                        {sg.label}
+                      </p>
+                      <SkillItems items={sg.items} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <SkillItems items={group.items ?? []} />
+              )}
+            </div>
           </div>
         ))}
       </div>

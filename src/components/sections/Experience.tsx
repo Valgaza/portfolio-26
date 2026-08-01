@@ -109,11 +109,13 @@ export default function Experience() {
 
   return (
     <section ref={root} id="experience" className="relative">
-      {/* The pinned box (inner div, not the <section>). Opaque + z-10 so nothing
-          bleeds through while it's pinned. */}
+      {/* The pinned box (inner div, not the <section>). z-10 keeps it above the
+          fixed particle field; we DON'T fill it (no bg-background) so the drifting
+          particles show through this section too. Nothing overlaps it during the
+          pinned scroll, so there's nothing to bleed through. */}
       <div
         ref={pin}
-        className="relative z-10 bg-background md:h-screen md:overflow-hidden"
+        className="relative z-10 md:h-screen md:overflow-hidden"
       >
         <div
           ref={layer}
