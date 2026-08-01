@@ -51,5 +51,20 @@ next-env.d.ts
 # motiscope analysis output (curated frames + reports)
 /.motiscope
 
-# Personal CV — do not publish
-AaryaPatil_CV.pdf
+# Local AI / editor config
+/.claude
+
+# Agent build-notes — local only, not part of the public repo
+/AGENTS.md
+/CLAUDE.md
+
+# Display font (Kovanov) — "Free for Personal Use", NOT redistributable, so it
+# is kept OUT of the public repo. Download it and drop the files in content/.
+# See README ("Fonts"). The licence text itself (exFont-License.txt) stays.
+content/*.otf
+content/*.ttf
+content/readme.html
+
+# Real AI system prompt — personal content, kept out of the public repo.
+# Copy knowledge.example.ts → knowledge.ts and fill it in. See README.
+src/lib/chat/knowledge.ts

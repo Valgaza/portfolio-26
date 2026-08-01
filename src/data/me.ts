@@ -9,8 +9,11 @@
  */
 
 export type SkillGroup = {
-  category: string; // e.g. "Languages", "Frameworks", "Tools"
-  items: string[]; // become the falling Matter.js tags
+  category: string; // section label, e.g. "Languages", "Machine Learning"
+  // A group is EITHER a flat list of tools (Languages, Web, Databases) …
+  items?: string[];
+  // … OR split into labelled sub-rows (e.g. Machine Learning → NLP, CV, Serving).
+  subgroups?: { label: string; items: string[] }[];
 };
 
 export type Project = {
@@ -41,68 +44,62 @@ export type Experience = {
   location?: string;
 };
 
+// Only the fields the site actually renders live here. The AI chat is grounded
+// separately (see src/lib/chat/knowledge.ts), and projects are folder-driven
+// (content/projects/*.json via src/lib/projects.ts) — so neither reads `me`.
 export type Me = {
   name: string;
-  role: string; // e.g. "Engineering student & web developer"
-  degree: string;
-  college: string;
-  gradYear: string;
-  location: string;
-  bio: string; // a short paragraph in your own voice
   skills: SkillGroup[];
   experiences: Experience[]; // ordered left-to-right on the Experience timeline
-  projects: Project[];
-  funFacts: string[];
   socials: SocialLink[];
   email: string;
 };
 
-// Real content for Aarya Patil (sourced from AaryaPatil_CV.pdf). NOTE: the visual
-// DESIGN is still a study of the Roshan Sahu portfolio — that attribution stays
-// in the footer; only the CONTENT below is personalised.
 export const me: Me = {
   name: "Aarya Patil",
-  role: "computer engineering student and AI/ML developer",
-  degree: "B.Tech in Computer Engineering",
-  college: "K. J. Somaiya College of Engineering",
-  gradYear: "2027",
-  location: "Mumbai, India",
-  bio: "I build AI systems that make it to production — retrieval-augmented platforms, computer-vision pipelines, and NLP tooling. Through internships at PwC, Amnex, and Fostride, I've turned research-grade models into software people actually use, and I care as much about the engineering around a model as the model itself.",
   skills: [
     {
       category: "Languages",
       items: ["Python", "C++", "Java", "SQL", "JavaScript"],
     },
     {
-      category: "ML / AI",
-      items: ["RAG", "Transformers", "NLP", "Tool-Calling Agents", "TFT"],
-    },
-    {
-      category: "Computer Vision",
-      items: ["YOLOv8", "DINOv2", "OpenCV", "Pytesseract"],
-    },
-    {
-      category: "LLMs & Serving",
-      items: ["Llama", "Mistral", "Gemma", "vLLM", "Hugging Face"],
-    },
-    {
-      category: "Frameworks & Tools",
-      items: [
-        "PyTorch",
-        "TensorFlow",
-        "FastAPI",
-        "Flask",
-        "Next.js",
-        "React",
-        "Git",
-        "Docker",
+      category: "Machine Learning",
+      subgroups: [
+        {
+          label: "NLP / LLM",
+          items: [
+            "RAG",
+            "Transformers",
+            "NLP",
+            "TFT",
+            "Fine-tuning",
+            "LoRA / PEFT",
+            "Quantization",
+          ],
+        },
+        {
+          label: "Computer Vision",
+          items: [
+            "Object Detection",
+            "Image Segmentation",
+            "OpenCV",
+          ],
+        },
+        {
+          label: "Frameworks & Serving",
+          items: ["PyTorch", "TensorFlow", "vLLM", "Hugging Face"],
+        },
       ],
+    },
+    {
+      category: "Web & Dev Tools",
+      items: ["FastAPI", "Flask", "Next.js", "React", "Git", "Docker"],
     },
     {
       category: "Databases & Infra",
       items: [
         "PostgreSQL",
-        "Supabase (pgvector)",
+        "Supabase",
         "AlloyDB",
         "Vector DBs",
         "Redis",
@@ -152,54 +149,15 @@ export const me: Me = {
       org: "Amnex",
       title: "AI/ML Intern",
       description:
-        "Architected AIRA, a self-hosted enterprise RAG platform over AlloyDB + pgvector with a secured 13-tool agent orchestrator, validated across 187 automated tests.",
+        "Architected AIRA, a self-hosted enterprise RAG platform over AlloyDB + pgvector with a secured 13-tool agent orchestrator",
       kind: "work",
       location: "India",
     },
   ],
-  projects: [
-    {
-      slug: "trafficos",
-      title: "TrafficOS",
-      tagline: "Forecasting and untangling traffic.",
-      category: "ML System",
-      description:
-        "A traffic-congestion forecasting system built on a Temporal Fusion Transformer with grid-based heatmap visualization, plus game-theoretic route optimization that redistributes traffic to relieve gridlock at its source.",
-      tech: ["Python", "PyTorch", "TFT"],
-      status: "live",
-      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
-    },
-    {
-      slug: "indexial",
-      title: "Indexial",
-      tagline: "Hybrid SQL + RAG query engine.",
-      category: "RAG / Search",
-      description:
-        "A document-QA engine that routes queries across SQL, RAG, and hybrid paths via intent classification, with cross-document semantic search using Jina AI embeddings + pgvector and session-based memory backed by a persistent table registry.",
-      tech: ["Python", "pgvector", "Jina AI"],
-      status: "live",
-      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
-    },
-    {
-      slug: "hiring-suite",
-      title: "Hiring Suite",
-      tagline: "An AI-powered hiring workflow.",
-      category: "AI / Automation",
-      description:
-        "An AI hiring workflow that automates resume ingestion and job-fit scoring with Transformers + Gemini — cutting recruiter workload ~70% — and adds soft-skill verification through CV-based emotion recognition.",
-      tech: ["Transformers", "Gemini", "Computer Vision"],
-      status: "live",
-      links: [{ label: "View Code", href: "https://github.com/Valgaza" }],
-    },
-  ],
-  funFacts: [
-    "I'm rated 1600+ on LeetCode and reached Pupil on Codeforces.",
-    "I completed the DeepLearning.AI Deep Learning Specialization — all four courses.",
-    "I built the telemetry stack for my college's Formula Student racing team, Orion Racing.",
-  ],
   socials: [
     { label: "GitHub", href: "https://github.com/Valgaza" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/aarya-patil" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/valgaza/" },
+    { label: "Instagram", href: "https://www.instagram.com/apatil_3004/"},
   ],
   email: "aaryapatil3004@gmail.com",
 };

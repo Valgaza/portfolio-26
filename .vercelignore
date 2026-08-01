@@ -1,0 +1,25 @@
+# Deploy with the Vercel CLI (`vercel`) from a local checkout.
+#
+# WHY THIS FILE EXISTS: the display font (content/*.otf,*.ttf) and the real AI
+# system prompt (src/lib/chat/knowledge.ts) are gitignored, so a Vercel *Git*
+# deploy would be missing them and fail the build. A CLI deploy uploads the
+# local working tree instead, and Vercel uses THIS file (not .gitignore) to
+# decide what to skip — so those files are included, while secrets and junk are
+# still excluded below.
+
+node_modules
+.next
+.git
+.motiscope
+reference
+
+# Secrets never leave the machine — set env vars in the Vercel dashboard.
+.env
+.env.local
+.env.*.local
+
+# Local-only notes / config
+.claude
+AGENTS.md
+CLAUDE.md
+*.tsbuildinfo

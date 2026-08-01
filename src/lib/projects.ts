@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { me, type Project } from "@/data/me";
+import { type Project } from "@/data/me";
 
 /**
  * Folder-driven projects.
@@ -23,8 +23,7 @@ import { me, type Project } from "@/data/me";
  *     "status": "live" | "in-progress", "links": [{ "label", "href" }],
  *     "image"?: "/projects/…" }
  *
- * If the folder is missing or empty, we fall back to the seed list in `me.ts`
- * (which also keeps the AI-chat knowledge base working).
+ * If the folder is missing or empty, the gallery is simply empty.
  */
 const DIR = path.join(process.cwd(), "content/projects");
 
@@ -33,9 +32,9 @@ export function getProjects(): Project[] {
   try {
     files = fs.readdirSync(DIR).filter((f) => f.endsWith(".json"));
   } catch {
-    return me.projects; // folder doesn't exist yet
+    return []; // folder doesn't exist yet
   }
-  if (files.length === 0) return me.projects;
+  if (files.length === 0) return [];
 
   return files
     .sort()

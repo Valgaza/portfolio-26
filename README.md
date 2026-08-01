@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Aarya Patil's personal portfolio — a single-page Next.js site with a pinned
+experience timeline, a folder-driven project gallery, and an AI chat that
+answers as a grounded "digital clone."
 
-First, run the development server:
+**Stack:** Next.js (App Router, Turbopack) · React · TypeScript · Tailwind v4 ·
+GSAP + Lenis (scroll/animation) · Motion · Vercel AI SDK + OpenAI.
+
+## Local setup
+
+```bash
+npm install
+```
+
+Then three one-time steps (each pulls in something kept out of the repo):
+
+### 1. Environment
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in `OPENAI_API_KEY` (from https://platform.openai.com/api-keys). Optional:
+`UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` enable per-IP rate
+limiting on the chat endpoint. Without the OpenAI key the chat returns a 503 and
+the drawer shows a friendly "not configured yet" message.
+
+### 2. Font
+
+The display typeface is **Kovanov**, licensed **Free for Personal Use** and
+therefore **not redistributed in this repo**. Download it and place both files
+in `content/`:
+
+- `content/Kovanov-Regular.otf`
+- `content/Kovanov Bold.ttf`
+
+Source: https://exfont.com/kovanov-regular-2.font (see `content/exFont-License.txt`).
+
+### 3. AI system prompt
+
+The chat is grounded on a static system prompt kept out of the repo (it's
+personal). Create your own from the template:
+
+```bash
+cp src/lib/chat/knowledge.example.ts src/lib/chat/knowledge.ts
+```
+
+Then edit `knowledge.ts` with your real content.
+
+### Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Projects** — one JSON file per project in `content/projects/` (sorted by
+  filename). Images go in `public/projects/` and are referenced as
+  `"image": "/projects/<slug>.png"`. No code changes needed to add a project.
+- **Skills / experience / socials / email** — `src/data/me.ts`.
+- **Chat knowledge / persona** — `src/lib/chat/knowledge.ts` (gitignored).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploying
 
-## Learn More
+Because the font and `knowledge.ts` are gitignored, a **Git-connected Vercel
+build would fail** (those files aren't in the repo). Deploy with the **Vercel
+CLI** from a local checkout instead:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+vercel        # preview
+vercel --prod # production
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`.vercelignore` makes the CLI upload the local font + prompt while excluding
+secrets. Set `OPENAI_API_KEY` (and any Upstash vars) in the Vercel project's
+environment settings — `.env.local` is never uploaded.
