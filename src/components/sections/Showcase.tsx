@@ -17,10 +17,15 @@ import { LaunchArrow } from "@/components/ui/LaunchArrow";
 
 // Placeholder metrics — real numbers from the CV; copy tuned later.
 const STATS = [
-  { value: "9.32", label: "CGPA" },
-  { value: "3", label: "AI/ML internships" },
-  { value: "1600+", label: "LeetCode rating" },
+  { value: "21 Yrs", label: "Uptime" },
+  { value: "Mumbai, India", label: "Home" },
+  { value: "CSE Final Year", label: "@KJSCE" },
 ];
+
+// Résumé link — opens in a new tab. NOTE: the CV in the repo root is gitignored
+// ("do not publish"), so point this at either a public copy dropped in
+// `public/` (e.g. "/AaryaPatil_Resume.pdf") or a hosted link (Google Drive…).
+const RESUME_URL = "/AaryaPatil_CV.pdf";
 
 export default function Showcase() {
   const root = useRef<HTMLElement>(null);
@@ -30,9 +35,9 @@ export default function Showcase() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      // Start as the Preloader bars begin dropping (~1.6s in) so the hero
+      // Start as the Preloader bars begin dropping (~1.8s in) so the hero
       // resolves into view exactly as the curtain lifts.
-      const tl = gsap.timeline({ delay: 1.6 });
+      const tl = gsap.timeline({ delay: 1.8 });
 
       const lines = gsap.utils.toArray<HTMLElement>(".hero-line", root.current!);
       gsap.set(lines, { yPercent: 115 });
@@ -61,35 +66,38 @@ export default function Showcase() {
   return (
     <section ref={root} id="showcase" className="relative min-h-svh">
       {/* Hero body (the nav is the global <Navbar />, mounted in layout) */}
-      <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-32 sm:px-12 lg:px-20">
-        <div className="flex flex-1 flex-col justify-center gap-14 lg:flex-row lg:items-end lg:justify-between">
+      <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-120 sm:px-12 lg:px-20">
+        <div className="flex flex-1 flex-col justify-center">
+          <p className="hero-fade mb-8 font-mono text-xs uppercase tracking-[0.3em] text-muted">
+            Jack of it all, master of some.
+          </p>
+
+          {/* The headline and the stat block share this row; on lg they align at
+              the TOP so the stats start level with the "AI / ML" headline. */}
+          <div className="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between">
           {/* Left — headline + copy */}
           <div className="max-w-2xl">
-            <p className="hero-fade mb-6 font-mono text-xs uppercase tracking-[0.3em] text-muted">
-              {me.location} · Available for AI/ML roles
-            </p>
-
-            <h1 className="font-display text-[clamp(2.25rem,7vw,6rem)] uppercase leading-[0.9] tracking-tight">
+            <h1 className="font-display text-[clamp(2.5rem,5.5vw,4.5rem)] uppercase leading-[0.9] tracking-tight">
               <span className="block overflow-hidden pb-[0.04em]">
-                <span className="hero-line block text-accent">AI / ML</span>
+                <span className="hero-line block text-accent">Software</span>
               </span>
               <span className="block overflow-hidden pb-[0.08em]">
-                <span className="hero-line block">Developer</span>
+                <span className="hero-line block">Engineer</span>
               </span>
             </h1>
 
-            <p className="hero-fade mt-8 max-w-md text-lg leading-relaxed text-muted">
-              Hi, I&apos;m {first} — I build AI systems that make it to
-              production: retrieval-augmented platforms, computer-vision
-              pipelines, and NLP tooling.
+            <p className="hero-fade mt-5 max-w-md text-xl leading-relaxed text-muted">
+              Hi, I&apos;m {first}. I build systems that solve problems and look good doing it. Comfortable across AI, ML, full-stack, and data, but right now I'm going a few layers deeper into ML.
             </p>
 
             <div className="hero-fade mt-9 flex flex-wrap items-center gap-6">
               <a
-                href="#contact"
+                href={RESUME_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] text-background transition-colors hover:bg-accent hover:text-on-accent"
               >
-                Let&apos;s talk
+                My resume
                 <LaunchArrow />
               </a>
               <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-muted">
@@ -115,6 +123,7 @@ export default function Showcase() {
               </div>
             ))}
           </dl>
+          </div>
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ import { useIsoLayoutEffect } from "@/lib/animation/reveal";
  * looping forever. Sits at -z-10 (above the canvas, below all content) and is
  * inert (pointer-events-none, aria-hidden). Skipped under reduced-motion.
  */
-const COUNT = 120;
+const COUNT = 150;
 
 export default function ParticleBackground() {
   const root = useRef<HTMLDivElement>(null);
@@ -22,13 +22,13 @@ export default function ParticleBackground() {
     const ctx = gsap.context(() => {
       const dots = gsap.utils.toArray<HTMLElement>(".particle", root.current!);
       dots.forEach((p) => {
-        const size = gsap.utils.random(1.5, 5);
+        const size = gsap.utils.random(2, 6);
         gsap.set(p, {
           width: size,
           height: size,
           x: gsap.utils.random(0, window.innerWidth),
           y: gsap.utils.random(0, window.innerHeight),
-          opacity: gsap.utils.random(0.18, 0.65),
+          opacity: gsap.utils.random(0.3, 0.8),
         });
         gsap.to(p, {
           y: "+=" + window.innerHeight,

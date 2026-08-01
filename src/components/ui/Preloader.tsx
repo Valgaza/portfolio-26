@@ -29,18 +29,23 @@ export default function Preloader() {
     }
 
     const ctx = gsap.context(() => {
-      // Park the letters below their clip so the first paint is already the
-      // pre-animation state (useLayoutEffect runs before paint → no flash).
-      gsap.set(".pre-letter", { yPercent: 100 });
+      // Park the letters below their clip, and reveal the name container that the
+      // server paints at opacity 0 (see the inline style below). This runs in the
+      // layout effect, before paint, so there's never a frame of the full name at
+      // rest — GSAP fully owns the letters' yPercent from here.
+      gsap.set(".pre-name", { opacity: 1 });
+      // Park a touch beyond 100% — the clip has pb-[0.1em] below it, so a plain
+      // 100% leaves a sliver of the letter tops peeking above the clip edge.
+      gsap.set(".pre-letter", { yPercent: 120 });
 
       const tl = gsap.timeline({
         defaults: { ease: "power3.inOut" },
         onComplete: () => setDone(true),
       });
 
-      tl.to(".pre-letter", { yPercent: 0, stagger: 0.05, duration: 0.5 });
+      tl.to(".pre-letter", { yPercent: 0, stagger: 0.06, duration: 0.6 });
       // Hold, then drop the bars away to reveal the page.
-      tl.to(".pre-bar", { yPercent: 100, stagger: 0.06, duration: 0.6 }, "+=0.5");
+      tl.to(".pre-bar", { yPercent: 100, stagger: 0.07, duration: 0.7 }, "+=0.6");
       tl.to(".pre-name", { autoAlpha: 0, duration: 0.4 }, "<0.1");
       tl.to(root.current, { autoAlpha: 0, duration: 0.3 }, "<0.3");
     }, root);
@@ -56,7 +61,13 @@ export default function Preloader() {
         <div key={i} className="pre-bar h-full flex-1 bg-foreground" />
       ))}
 
-      <p className="pre-name absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 overflow-hidden pb-[0.1em] font-display text-[13vw] leading-none text-background">
+      {/* opacity:0 on first paint (server HTML) so the full name never flashes
+          before the layout effect parks the letters below the clip; GSAP fades it
+          back in (opacity 1) and animates the letters up. */}
+      <p
+        className="pre-name absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 overflow-hidden pb-[0.1em] font-display text-[13vw] leading-none text-background"
+        style={{ opacity: 0 }}
+      >
         {NAME.split("").map((ch, i) => (
           <span key={i} className="pre-letter inline-block">
             {ch === " " ? NBSP + NBSP : ch}
