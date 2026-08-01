@@ -1,0 +1,13 @@
+{
+  "slug": "portfolio-26",
+  "title": "Portfolio 26",
+  "tagline": "This site — a portfolio you can talk to.",
+  "category": "Web / AI",
+  "description": "The site you're on. A single-page Next.js portfolio with GSAP + Lenis motion and a Tailwind v4 design system, plus an AI 'digital clone' chat grounded on a cached system prompt with a deterministic topical guardrail and per-IP rate limiting.",
+  "tech": ["Next.js", "GSAP", "OpenAI"],
+  "status": "live",
+  "image": "/projects/portfolio-26.png",
+  "links": [
+    { "label": "View Code", "href": "https://github.com/Valgaza/portfolio-26" }
+  ]
+}
