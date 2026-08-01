@@ -1,0 +1,14 @@
+{
+  "slug": "graph-colouring",
+  "title": "Graph Colouring Visualizer",
+  "tagline": "Backtracking, one step at a time.",
+  "category": "Algorithm / Demo",
+  "description": "An interactive web app that walks through the graph-colouring algorithm step by step using a backtracking approach — visualizing how the search assigns colours, hits conflicts, and rolls back across the graph.",
+  "tech": ["JavaScript"],
+  "status": "live",
+  "image": "/projects/graph-colouring.png",
+  "links": [
+    { "label": "Live demo", "href": "https://valgaza.github.io/GraphColouring/" },
+    { "label": "View Code", "href": "https://github.com/Valgaza/GraphColouring" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "docusage",
+  "title": "DocuSage",
+  "tagline": "PDFs into retrieval-ready vectors.",
+  "category": "RAG / Data Pipeline",
+  "description": "A production-ready pipeline that turns complex PDF documents into retrieval-ready vector data for AI applications — handling parsing, chunking, and embedding so downstream RAG systems get clean, queryable context.",
+  "tech": ["TypeScript", "Python", "RAG"],
+  "status": "live",
+  "image": "/projects/docusage.png",
+  "links": [
+    { "label": "Live demo", "href": "https://docusage-theta.vercel.app" },
+    { "label": "View Code", "href": "https://github.com/Aditey1908/DocuSage" }
+  ]
+}

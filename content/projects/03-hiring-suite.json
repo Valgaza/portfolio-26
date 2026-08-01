@@ -6,5 +6,6 @@
   "description": "An AI hiring workflow that automates resume ingestion and job-fit scoring with Transformers + Gemini — cutting recruiter workload ~70% — and adds soft-skill verification through CV-based emotion recognition.",
   "tech": ["Transformers", "Gemini", "Computer Vision"],
   "status": "live",
-  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza" }]
+  "image": "/projects/hiring-suite.png",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza/Hiring_Suite" }]
 }

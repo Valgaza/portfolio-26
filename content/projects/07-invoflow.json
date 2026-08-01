@@ -1,0 +1,13 @@
+{
+  "slug": "invoflow",
+  "title": "InvoFlow",
+  "tagline": "Decentralized invoice financing, on-chain.",
+  "category": "Web3 / DeFi",
+  "description": "A decentralized invoice-financing platform where invoices are tokenized as on-chain assets, funded fractionally by multiple backers, and settled automatically via smart contracts — built on Ethereum with Chainlink and account abstraction (ERC-4337).",
+  "tech": ["Solidity", "React", "Ethereum"],
+  "status": "live",
+  "links": [
+    { "label": "Live demo", "href": "https://invoflow-pi.vercel.app/" },
+    { "label": "View Code", "href": "https://github.com/Shreyash-Thakur/InvoFlow" }
+  ]
+}

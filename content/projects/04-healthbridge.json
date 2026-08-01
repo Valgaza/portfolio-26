@@ -1,0 +1,11 @@
+{
+  "slug": "healthbridge",
+  "title": "HealthBridge",
+  "tagline": "A telehealth platform for continuous care.",
+  "category": "Full-Stack Web",
+  "description": "A telehealth web app for symptom tracking, appointment booking, prescriptions, and care plans — connecting patients and providers around a shared record. Built end-to-end with PHP, MySQL, and vanilla JavaScript.",
+  "tech": ["PHP", "MySQL", "JavaScript"],
+  "status": "live",
+  "image": "/projects/healthbridge.png",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza/HealthBridge" }]
+}

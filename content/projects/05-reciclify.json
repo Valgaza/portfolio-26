@@ -1,0 +1,11 @@
+{
+  "slug": "reciclify",
+  "title": "Reciclify",
+  "tagline": "Doorstep recycling, made effortless.",
+  "category": "Web Platform",
+  "description": "A recycling platform that connects households with collectors for doorstep pickup of plastic and e-waste, wrapping order management and educational content in a responsive, approachable interface.",
+  "tech": ["JavaScript", "HTML", "CSS"],
+  "status": "live",
+  "image": "/projects/reciclify.png",
+  "links": [{ "label": "View Code", "href": "https://github.com/Valgaza/Reciclify" }]
+}

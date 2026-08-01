@@ -29,12 +29,22 @@ import MaskRevealUp from "@/components/ui/MaskRevealUp";
  */
 
 // Panel sizing — tweak here. ACTIVE/INACTIVE are flex-basis widths on md+.
-const ACTIVE = "24rem";
-const INACTIVE = "5rem";
+const ACTIVE = "38rem";
+const INACTIVE = "7rem";
 // Motion — matches the reference's easeInOut ~0.3s. Bump DURATION for a slower,
 // more languid expand.
 const DURATION = 0.4;
 const EASE = "power2.inOut";
+
+// ── Image treatment (Option A) ─────────────────────────────────────────────
+// A fixed deep-teal wash sits over every card image so the gallery reads as one
+// cohesive set against the canvas. TINT is a LITERAL colour (not a theme token)
+// on purpose, so it darkens the image in BOTH light and dark themes. Dim at rest
+// (TINT_REST) for cohesion; lifts toward full colour when a panel is active
+// (TINT_ACTIVE). Tweak these three to taste.
+const TINT = "#0e2a33"; // deep teal, theme-independent
+const TINT_REST = 0.7; // overlay opacity on inactive panels (0–1)
+const TINT_ACTIVE = 0.1; // overlay opacity on the active panel (0–1)
 
 // Non-"live" projects get a small badge. `undefined`/"live" = no badge.
 const STATUS_LABEL: Record<string, string> = {
@@ -97,7 +107,11 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
               }}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
-              className="relative h-[24rem] flex-none cursor-pointer overflow-hidden rounded-3xl border border-foreground/10 bg-foreground/[0.02]"
+              className={`relative h-[38rem] flex-none cursor-pointer overflow-hidden rounded-3xl border bg-foreground/[0.02] transition-[border-color,box-shadow] duration-500 ${
+                isActive
+                  ? "border-accent/60 shadow-[0_12px_45px_-12px_rgba(215,74,73,0.50),0_0_44px_-6px_rgba(215,74,73,0.42)]"
+                  : "border-foreground/10"
+              }`}
             >
               {/* Image (or a graceful fallback, mirroring Showcase). */}
               {project.image ? (
@@ -115,17 +129,49 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
                 </div>
               )}
 
-              {/* Bottom scrim — only visible on the active panel. */}
+              {/* (A) Deep-teal wash over the image — a fixed colour so it darkens
+                  in BOTH themes. Dim at rest for cohesion; lifts toward full
+                  colour when the panel is active. */}
               <div
-                className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
+                aria-hidden
+                className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+                style={{
+                  backgroundColor: TINT,
+                  opacity: isActive ? TINT_ACTIVE : TINT_REST,
+                }}
+              />
+
+              {/* Text scrim — a dark bed localised to the bottom so the title and
+                  tagline stay legible over ANY image, regardless of what's behind
+                  them. Independent of the tint above; ramps in only on the active
+                  panel (where the text shows). */}
+              <div
+                className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent transition-opacity duration-300 ${
                   isActive ? "opacity-100" : "opacity-0"
                 }`}
               />
 
+              {/* Spine label — the project name on the CLOSED bar, reading
+                  bottom-to-top (writing-mode makes the flow vertical; rotate-180
+                  flips it to run upward). Sits at the bottom of the bar and
+                  fades out on the active panel, where the horizontal title in
+                  the scrim takes over. Decorative: the real title lives in the
+                  content block below, so this is aria-hidden. */}
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute inset-x-0 bottom-6 flex justify-center transition-opacity duration-300 ${
+                  isActive ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                <span className="rotate-180 whitespace-nowrap font-display text-[2.025rem] font-normal tracking-tight text-[#ece6d9] [word-spacing:0.3em] [writing-mode:vertical-rl]">
+                  {project.title}
+                </span>
+              </div>
+
               {/* Content — fades in on the active panel; its width stays fixed so
                   the text doesn't reflow while the panel expands. */}
               <div
-                className={`absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 transition-opacity duration-300 ${
+                className={`absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] transition-opacity duration-300 ${
                   isActive ? "opacity-100 delay-100" : "opacity-0"
                 }`}
               >
