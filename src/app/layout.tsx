@@ -15,10 +15,11 @@ import Navbar from "@/components/ui/Navbar";
  *   • mono    → Martian Mono
  */
 const kovanov = localFont({
-  src: "../../content/Kovanov-Regular.otf",
+  src: [
+    { path: "../../content/Kovanov-Regular.otf", weight: "400", style: "normal" },
+    { path: "../../content/Kovanov Bold.ttf", weight: "700", style: "normal" },
+  ],
   variable: "--font-kovanov",
-  weight: "400",
-  style: "normal",
   display: "swap",
 });
 const hanken = Hanken_Grotesk({

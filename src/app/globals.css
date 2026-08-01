@@ -77,6 +77,48 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Scrollbar — no track, just a faint rounded accent "blob" thumb. Applied
+   globally so the page and the chat transcript share it. The 2px transparent
+   border + padding-box clip insets the thumb to ~4px so it floats as a thin
+   blob rather than filling the gutter. Colour pulls from --accent, so it stays
+   coordinated in both themes. NOTE: styling ::-webkit-scrollbar makes macOS use
+   a persistent (non-overlay) bar, so the blob is always visible while there's
+   overflow — kept deliberately faint. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--accent) 45%, transparent)
+    transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in oklab, var(--accent) 75%, transparent);
+}
+
+/* Tailwind v4's Preflight dropped the default `cursor: pointer` on interactive
+   elements. Without it, hovering a text button falls back to the browser default
+   — the I-beam over the label's (selectable) text and the arrow over the padding,
+   which reads as a flicker. Put the pointer back, site-wide. An explicit cursor
+   also inherits to the label text, so no more I-beam. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+summary,
+label[for] {
+  cursor: pointer;
+}
+
 /* Hero wordmark ("structured ambition"). At rest it's plain white — no accent.
    On hover the hard offset yellow shadow pops out from behind the white letters
    (a 3D-ish accent copy sliding out), while the fill stays white. The intro
