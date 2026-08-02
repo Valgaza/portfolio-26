@@ -31,7 +31,7 @@ const martian = Martian_Mono({ variable: "--font-martian", subsets: ["latin"] })
 const fontVars = [kovanov, hanken, martian].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
-  title: "Aarya Patil — AI/ML Developer",
+  title: "Aarya Patil",
   description: "Portfolio — engineering, projects, and an AI who knows me.",
 };
 
