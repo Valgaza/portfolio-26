@@ -104,7 +104,7 @@ export default function Skills() {
         className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 lg:px-20"
       >
       {/* Header */}
-      <div className="mb-20 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mb-10 flex flex-col gap-8 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-5">
           <p className="reveal-fade font-mono text-xs uppercase tracking-[0.35em] text-muted">
             Full Toolkit
@@ -124,7 +124,7 @@ export default function Skills() {
         {me.skills.map((group) => (
           <div
             key={group.category}
-            className="reveal-fade grid gap-6 py-9 sm:grid-cols-12"
+            className="reveal-fade grid gap-6 py-6 sm:grid-cols-12 lg:py-8"
           >
             <h3 className="font-display text-2xl uppercase leading-none tracking-tight text-muted sm:col-span-4 sm:text-3xl lg:text-4xl">
               {group.category}

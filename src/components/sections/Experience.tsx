@@ -153,7 +153,7 @@ export default function Experience() {
                   <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-muted">
                     {e.kind === "education" ? "Education" : "Experience"}
                   </span>
-                  <span className="font-display text-2xl leading-[0.95] tracking-tight lg:text-[2rem]">
+                  <span className="font-display text-xl leading-[0.95] tracking-tight lg:text-[2rem]">
                     {e.org}
                   </span>
                   <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">

@@ -28,9 +28,12 @@ import MaskRevealUp from "@/components/ui/MaskRevealUp";
  * out of the width means no inline-style tug-of-war with GSAP.
  */
 
-// Panel sizing — tweak here. ACTIVE/INACTIVE are flex-basis widths on md+.
-const ACTIVE = "38rem";
-const INACTIVE = "7rem";
+// Panel sizing — PROPORTIONAL, not fixed. Panels have flex-basis:0 and share
+// the row's width by flex-grow ratio, so the accordion always fits the viewport
+// (no horizontal overflow) no matter how many projects there are. The active
+// panel grows to ACTIVE_GROW, the rest to INACTIVE_GROW.
+const ACTIVE_GROW = 7;
+const INACTIVE_GROW = 1;
 // Motion — matches the reference's easeInOut ~0.3s. Bump DURATION for a slower,
 // more languid expand.
 const DURATION = 0.4;
@@ -64,14 +67,14 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
   const panels = useRef<(HTMLDivElement | null)[]>([]);
   const first = useRef(true);
 
-  // GSAP owns flex-basis. On mount we snap panels into place (no animation);
-  // on every `active` change after that we tween them.
+  // GSAP owns flex-grow. On mount we snap panels into place (no animation); on
+  // every `active` change after that we tween the grow ratio.
   useIsoLayoutEffect(() => {
     panels.current.forEach((p, i) => {
       if (!p) return;
-      const basis = i === active ? ACTIVE : INACTIVE;
-      if (first.current) gsap.set(p, { flexBasis: basis });
-      else gsap.to(p, { flexBasis: basis, duration: DURATION, ease: EASE });
+      const grow = i === active ? ACTIVE_GROW : INACTIVE_GROW;
+      if (first.current) gsap.set(p, { flexGrow: grow });
+      else gsap.to(p, { flexGrow: grow, duration: DURATION, ease: EASE });
     });
     first.current = false;
   }, [active]);
@@ -80,7 +83,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
     <section ref={root} id="gallery" className="relative">
       <div
         ref={pin}
-        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 lg:px-20"
+        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 md:h-screen md:overflow-hidden lg:px-20"
       >
       {/* Header — same masked-line / fade vocabulary as the rest of the site. */}
       <div className="mb-14 max-w-3xl">
@@ -92,8 +95,9 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
         </h2>
       </div>
 
-      {/* md+ : the hover-expand accordion. */}
-      <div className="reveal-fade hidden md:flex md:w-full md:items-center md:justify-center md:gap-2">
+      {/* md+ : the hover-expand accordion. Fills the height left under the
+          header (md:flex-1) so panels fit the pinned screen without clipping. */}
+      <div className="reveal-fade hidden md:flex md:min-h-0 md:w-full md:flex-1 md:items-stretch md:justify-center md:gap-2 md:max-h-[40rem]">
         {projects.map((project, i) => {
           const isActive = i === active;
           const repo =
@@ -107,7 +111,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
               }}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
-              className={`relative h-[38rem] flex-none cursor-pointer overflow-hidden rounded-3xl border bg-foreground/[0.02] transition-[border-color,box-shadow] duration-500 ${
+              className={`relative h-full min-w-0 grow basis-0 cursor-pointer overflow-hidden rounded-3xl border bg-foreground/[0.02] transition-[border-color,box-shadow] duration-500 ${
                 isActive
                   ? "border-accent/60 shadow-[0_12px_45px_-12px_rgba(215,74,73,0.50),0_0_44px_-6px_rgba(215,74,73,0.42)]"
                   : "border-foreground/10"

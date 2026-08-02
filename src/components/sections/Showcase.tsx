@@ -66,7 +66,7 @@ export default function Showcase() {
   return (
     <section ref={root} id="showcase" className="relative min-h-svh">
       {/* Hero body (the nav is the global <Navbar />, mounted in layout) */}
-      <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-120 sm:px-12 lg:px-20">
+      <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-32 sm:px-12 sm:pt-48 lg:px-20 lg:pt-120">
         <div className="flex flex-1 flex-col justify-center">
           <p className="hero-fade mb-8 font-mono text-xs uppercase tracking-[0.3em] text-muted">
             Jack of it all, master of some.
@@ -111,10 +111,10 @@ export default function Showcase() {
           </div>
 
           {/* Right — stat block */}
-          <dl className="flex gap-10 sm:gap-14 lg:flex-col lg:gap-8 lg:text-right">
+          <dl className="flex flex-wrap gap-x-10 gap-y-5 sm:gap-x-14 lg:flex-col lg:gap-8 lg:text-right">
             {STATS.map((s) => (
               <div key={s.label} className="hero-fade">
-                <dt className="font-display text-4xl leading-none tracking-tight text-accent sm:text-5xl">
+                <dt className="font-display text-3xl leading-none tracking-tight text-accent sm:text-4xl lg:text-5xl">
                   {s.value}
                 </dt>
                 <dd className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-muted">

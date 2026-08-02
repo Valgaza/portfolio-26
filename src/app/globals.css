@@ -75,6 +75,10 @@ body {
   color: var(--foreground);
   font-family: var(--role-body), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Safety net against horizontal overflow. `clip` (not `hidden`) doesn't
+     create a scroll container, so it won't interfere with GSAP's pinned
+     sections the way `overflow: hidden` can. */
+  overflow-x: clip;
 }
 
 /* Scrollbar — no track, just a faint rounded accent "blob" thumb. Applied
