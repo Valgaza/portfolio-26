@@ -101,7 +101,7 @@ export default function Skills() {
     <section ref={root} id="skills" className="relative">
       <div
         ref={pin}
-        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(5.5rem,11vh,6rem)] sm:px-12 lg:px-20"
+        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(4.25rem,8vh,5rem)] sm:px-12 lg:px-20"
       >
       {/* Header */}
       <div className="mb-[clamp(2rem,6vh,4rem)] flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">

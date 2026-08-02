@@ -83,7 +83,7 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
     <section ref={root} id="gallery" className="relative">
       <div
         ref={pin}
-        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(5.5rem,11vh,6rem)] sm:px-12 md:h-[100svh] md:overflow-hidden lg:px-20"
+        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(4.25rem,8vh,5rem)] sm:px-12 md:h-[100svh] md:overflow-hidden lg:px-20"
       >
       {/* Header — same masked-line / fade vocabulary as the rest of the site. */}
       <div className="mb-[clamp(2rem,6vh,3.5rem)] max-w-3xl">

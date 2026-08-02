@@ -119,7 +119,7 @@ export default function Experience() {
       >
         <div
           ref={layer}
-          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:pb-[clamp(1.5rem,5vh,4rem)] md:pt-[clamp(5.5rem,11vh,6rem)] lg:px-20"
+          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:pb-[clamp(1.5rem,5vh,4rem)] md:pt-[clamp(4.25rem,8vh,5rem)] lg:px-20"
         >
           {/* Header */}
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
