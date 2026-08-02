@@ -52,7 +52,7 @@ export default function Footer() {
     <footer className="flex flex-col overflow-hidden px-6 pb-10 pt-16 sm:px-12 lg:px-20">
       <div className="h-px w-full bg-foreground/15" />
 
-      <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 py-10 min-[860px]:grid-cols-3">
         {/* Contact links */}
         <div className="flex flex-col gap-3">
           <a href={`mailto:${me.email}`} className={LINK_CLASS}>
@@ -84,19 +84,23 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Back to top — centred */}
-        <div className="flex flex-col gap-3 sm:items-center">
+        {/* Back to top — left-aligned (stacked) below the breakpoint, centred
+            in its column at/above it. */}
+        <div className="flex flex-col gap-3 min-[860px]:items-center">
           <button
             type="button"
             onClick={scrollToTop}
-            className={`${LINK_CLASS} text-center`}
+            className={`${LINK_CLASS} text-left`}
           >
             Back to top
           </button>
         </div>
 
-        {/* Personal sign-off + local time */}
-        <div className="flex flex-col gap-3 sm:text-right">
+        {/* Personal sign-off + local time. The footer's mobile↔desktop switch
+            lives in THREE classes that must share the same px: `grid-cols-3`
+            (grid above), `items-center` (button above), and this `text-right`.
+            Change 768 in all three to move the breakpoint. */}
+        <div className="flex flex-col gap-3 min-[860px]:text-right">
           <span className="font-mono text-[0.8rem] uppercase tracking-[0.35em] text-foreground">
             No regrets
           </span>

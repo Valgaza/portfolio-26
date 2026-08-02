@@ -105,7 +105,7 @@ export default function ChatWidget() {
           on hover a pill slides out to its LEFT. Springs away when the card
           opens (the card grows from this same corner). ── */}
       <motion.div
-        className="fixed bottom-17 right-20 z-[190]"
+        className="fixed bottom-6 right-6 z-[190] sm:bottom-9 sm:right-10 md:bottom-13 md:right-15 lg:bottom-17 lg:right-20"
         initial={false}
         animate={
           open ? { opacity: 0, scale: reduce ? 1 : 0.5 } : { opacity: 1, scale: 1 }
@@ -172,7 +172,7 @@ export default function ChatWidget() {
         style={{ transformOrigin: "bottom right" }}
         className={`fixed z-[200] flex flex-col overflow-hidden border-foreground/10 bg-surface shadow-2xl
           inset-x-0 bottom-0 h-[85vh] rounded-t-2xl border-t
-          sm:inset-x-auto sm:bottom-17 sm:right-20 sm:top-auto sm:h-[680px] sm:max-h-[calc(100vh-3rem)] sm:w-[440px] sm:rounded-2xl sm:border
+          sm:inset-x-auto sm:bottom-9 sm:right-10 sm:top-auto sm:h-[680px] sm:max-h-[calc(100vh-3rem)] sm:w-[440px] sm:rounded-2xl sm:border md:bottom-13 md:right-15 lg:bottom-17 lg:right-20
           ${open ? "" : "pointer-events-none"}`}
       >
         {/* Header */}
