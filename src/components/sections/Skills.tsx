@@ -101,15 +101,15 @@ export default function Skills() {
     <section ref={root} id="skills" className="relative">
       <div
         ref={pin}
-        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 lg:px-20"
+        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(5.5rem,11vh,6rem)] sm:px-12 lg:px-20"
       >
       {/* Header */}
-      <div className="mb-10 flex flex-col gap-8 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mb-[clamp(2rem,6vh,4rem)] flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-5">
           <p className="reveal-fade font-mono text-xs uppercase tracking-[0.35em] text-muted">
             Full Toolkit
           </p>
-          <h2 className="font-display text-4xl uppercase tracking-tight sm:text-5xl lg:text-6xl">
+          <h2 className="font-display text-4xl uppercase tracking-tight sm:text-5xl lg:text-[clamp(2.75rem,6vh,3.75rem)]">
             <MaskLine>My Stack</MaskLine>
           </h2>
         </div>
@@ -124,7 +124,7 @@ export default function Skills() {
         {me.skills.map((group) => (
           <div
             key={group.category}
-            className="reveal-fade grid gap-6 py-6 sm:grid-cols-12 lg:py-8"
+            className="reveal-fade grid gap-6 py-[clamp(1rem,3vh,2rem)] sm:grid-cols-12"
           >
             <h3 className="font-display text-2xl uppercase leading-none tracking-tight text-muted sm:col-span-4 sm:text-3xl lg:text-4xl">
               {group.category}

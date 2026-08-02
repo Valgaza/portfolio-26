@@ -115,11 +115,11 @@ export default function Experience() {
           pinned scroll, so there's nothing to bleed through. */}
       <div
         ref={pin}
-        className="relative z-10 md:h-screen md:overflow-hidden"
+        className="relative z-10 md:h-[100svh] md:overflow-hidden"
       >
         <div
           ref={layer}
-          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:pb-16 md:pt-24 lg:px-20"
+          className="relative flex flex-col gap-16 px-6 py-24 sm:px-12 md:absolute md:inset-0 md:gap-0 md:px-12 md:pb-[clamp(1.5rem,5vh,4rem)] md:pt-[clamp(5.5rem,11vh,6rem)] lg:px-20"
         >
           {/* Header */}
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -127,7 +127,7 @@ export default function Experience() {
               <p className="font-mono text-xs uppercase tracking-[0.35em] text-muted">
                 Career
               </p>
-              <h2 className="font-display text-4xl tracking-tight sm:text-5xl lg:text-6xl">
+              <h2 className="font-display text-4xl tracking-tight sm:text-5xl lg:text-[clamp(2.75rem,6vh,3.75rem)]">
                 Experience &amp; education
               </h2>
             </div>
@@ -148,7 +148,7 @@ export default function Experience() {
               {exp.map((e) => (
                 <div
                   key={`card-${e.org}`}
-                  className="exp-card flex h-40 flex-col justify-end gap-2 pr-6"
+                  className="exp-card flex h-[clamp(7rem,18vh,10rem)] flex-col justify-end gap-2 pr-6"
                 >
                   <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-muted">
                     {e.kind === "education" ? "Education" : "Experience"}

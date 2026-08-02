@@ -65,19 +65,25 @@ export default function Showcase() {
 
   return (
     <section ref={root} id="showcase" className="relative min-h-svh">
-      {/* Hero body (the nav is the global <Navbar />, mounted in layout) */}
-      <div className="flex min-h-svh flex-col justify-center px-6 pb-16 pt-32 sm:px-12 sm:pt-48 lg:px-20 lg:pt-120">
-        <div className="flex flex-1 flex-col justify-center">
-          <p className="hero-fade mb-8 font-mono text-xs uppercase tracking-[0.3em] text-muted">
+      {/* Hero body (the nav is the global <Navbar />, mounted in layout).
+          Content is anchored to the BOTTOM of a one-viewport (svh) box: the
+          empty "sky" above is simply the leftover space, so it shrinks on short
+          viewports and grows on tall ones — no fixed top padding to overflow.
+          The top inset only guarantees clearance under the fixed navbar; the
+          vertical rhythm below is fluid on BOTH axes (vw + vh) so the whole
+          block contracts to fit any width×height instead of clipping. */}
+      <div className="flex min-h-svh flex-col justify-end px-6 pb-[clamp(2rem,7vh,4.5rem)] pt-[clamp(5.5rem,14vh,9rem)] sm:px-12 lg:px-20">
+        <div>
+          <p className="hero-fade mb-[clamp(1rem,4vh,2rem)] font-mono text-xs uppercase tracking-[0.3em] text-muted">
             Jack of it all, master of some.
           </p>
 
           {/* The headline and the stat block share this row; on lg they align at
               the TOP so the stats start level with the "AI / ML" headline. */}
-          <div className="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-[clamp(2rem,7vh,3.5rem)] lg:flex-row lg:items-start lg:justify-between">
           {/* Left — headline + copy */}
           <div className="max-w-2xl">
-            <h1 className="font-display text-[clamp(2.5rem,5.5vw,4.5rem)] uppercase leading-[0.9] tracking-tight">
+            <h1 className="font-display text-[clamp(2rem,4vw_+_2vh,4.5rem)] uppercase leading-[0.9] tracking-tight">
               <span className="block overflow-hidden pb-[0.04em]">
                 <span className="hero-line block text-accent">Software</span>
               </span>
@@ -86,11 +92,11 @@ export default function Showcase() {
               </span>
             </h1>
 
-            <p className="hero-fade mt-5 max-w-md text-xl leading-relaxed text-muted">
+            <p className="hero-fade mt-[clamp(0.75rem,2.5vh,1.25rem)] max-w-md text-[clamp(1rem,0.5vw_+_1vh,1.25rem)] leading-relaxed text-muted">
               Hi, I&apos;m {first}. I build systems that solve problems and look good doing it. Comfortable across AI, ML, full-stack, and data, but right now I'm going a few layers deeper into ML.
             </p>
 
-            <div className="hero-fade mt-9 flex flex-wrap items-center gap-6">
+            <div className="hero-fade mt-[clamp(1rem,4.5vh,2.25rem)] flex flex-wrap items-center gap-6">
               <a
                 href={RESUME_URL}
                 target="_blank"
@@ -111,10 +117,10 @@ export default function Showcase() {
           </div>
 
           {/* Right — stat block */}
-          <dl className="flex flex-wrap gap-x-10 gap-y-5 sm:gap-x-14 lg:flex-col lg:gap-8 lg:text-right">
+          <dl className="flex flex-wrap gap-x-10 gap-y-5 sm:gap-x-14 lg:flex-col lg:gap-[clamp(1rem,4vh,2rem)] lg:text-right">
             {STATS.map((s) => (
               <div key={s.label} className="hero-fade">
-                <dt className="font-display text-3xl leading-none tracking-tight text-accent sm:text-4xl lg:text-5xl">
+                <dt className="font-display text-[clamp(1.75rem,1vw_+_2.6vh,3rem)] leading-none tracking-tight text-accent">
                   {s.value}
                 </dt>
                 <dd className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-muted">

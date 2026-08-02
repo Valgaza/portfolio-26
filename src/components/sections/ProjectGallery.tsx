@@ -83,14 +83,14 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
     <section ref={root} id="gallery" className="relative">
       <div
         ref={pin}
-        className="flex min-h-screen flex-col justify-start px-6 pb-16 pt-24 sm:px-12 md:h-screen md:overflow-hidden lg:px-20"
+        className="flex min-h-[100svh] flex-col justify-start px-6 pb-[clamp(1.5rem,5vh,4rem)] pt-[clamp(5.5rem,11vh,6rem)] sm:px-12 md:h-[100svh] md:overflow-hidden lg:px-20"
       >
       {/* Header — same masked-line / fade vocabulary as the rest of the site. */}
-      <div className="mb-14 max-w-3xl">
+      <div className="mb-[clamp(2rem,6vh,3.5rem)] max-w-3xl">
         <p className="reveal-fade mb-4 font-mono text-xs uppercase tracking-[0.25em] text-muted">
           Build log
         </p>
-        <h2 className="font-display text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-5xl">
+        <h2 className="font-display text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-[clamp(2.25rem,5vh,3rem)]">
           <MaskLine>More of what I&apos;ve built.</MaskLine>
         </h2>
       </div>
