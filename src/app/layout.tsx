@@ -6,6 +6,7 @@ import SmoothScrollProvider from "@/lib/animation/SmoothScrollProvider";
 import Preloader from "@/components/ui/Preloader";
 import ParticleBackground from "@/components/ui/ParticleBackground";
 import Navbar from "@/components/ui/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 /**
  * Fonts. The rendered roles (--role-display / -body / -mono in globals.css)
@@ -58,6 +59,7 @@ export default function RootLayout({
         <ParticleBackground />
         <Navbar />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <Analytics />
       </body>
     </html>
   );
