@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -14,20 +14,17 @@ import { SYSTEM_PROMPT } from "@/lib/chat/knowledge";
 // Allow streamed responses up to 30s.
 export const maxDuration = 30;
 
-// Two models for two jobs. Needs OPENAI_API_KEY in the environment (.env.local).
-//  - GATE: a yes/no topical classifier. Cheap + fast is all it needs; nano is
-//    plenty and keeps the extra pre-flight call from adding much latency.
-//  - CHAT: the persona itself, where instruction-following and voice actually
-//    matter (the refusals, the no-partial-compliance rule, the Hinglish, the
-//    tone). A stronger model earns its keep here. The big system prompt is
-//    prompt-cached, so the pricier input tokens are discounted after the first
-//    hit.
-const GATE_MODEL = "gpt-5.4-nano-2026-03-17";
-const CHAT_MODEL = "gpt-5.4-mini-2026-03-17";
+// One model, two jobs. Needs ANTHROPIC_API_KEY in the environment (.env.local).
+//  - The GATE call is a yes/no topical classifier: cheap and fast is all it
+//    needs, so it stays a bare 16-token completion with no caching.
+//  - The CHAT call is the persona itself, where instruction-following and voice
+//    actually matter (the refusals, the no-partial-compliance rule, the
+//    Hinglish, the tone).
+// Haiku 4.5 handles both. Unlike OpenAI, Anthropic does not cache long prefixes
+// on its own — the system prompt is marked explicitly below.
+const MODEL = "claude-haiku-4-5-20251001";
 
-// Layer 4 — only ever send the last N messages to the model. Caps cost and,
-// more importantly, stops anyone from slow-walking a jailbreak by stuffing the
-// context over many turns.
+// Layer 4 — only ever send the last N messages to the model.
 const MAX_MESSAGES = 10;
 
 // Layer 2 — a deterministic topical gate. A cheap classifier call decides
@@ -92,9 +89,9 @@ function refusalResponse() {
 
 export async function POST(req: Request) {
   // Fail clearly if the key isn't set, rather than a cryptic provider error.
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY) {
     return new Response(
-      "The chat isn't configured yet (missing OPENAI_API_KEY).",
+      "The chat isn't configured yet (missing ANTHROPIC_API_KEY).",
       { status: 503 },
     );
   }
@@ -113,8 +110,14 @@ export async function POST(req: Request) {
 
   const { messages }: { messages: UIMessage[] } = await req.json();
 
-  // Layer 4 — trim to the most recent turns.
-  const recent = messages.slice(-MAX_MESSAGES);
+  // Layer 4 — drop anything that isn't a user or assistant turn, then trim to
+  // the most recent ones. `messages` is client-supplied and UIMessage allows
+  // role "system", so without the filter a caller could POST their own system
+  // turn and have it land next to the real prompt. The trim caps cost and, more
+  // importantly, stops anyone slow-walking a jailbreak over many turns.
+  const recent = messages
+    .filter((m) => m.role === "user" || m.role === "assistant")
+    .slice(-MAX_MESSAGES);
 
   // Layer 2 — topical gate. Build a compact transcript of the recent turns so
   // the classifier has context (a bare "it's on Gandhi" needs the turn before
@@ -125,7 +128,7 @@ export async function POST(req: Request) {
       .map((m) => `${m.role === "user" ? "User" : "Aarya"}: ${messageText(m)}`)
       .join("\n");
     const { text: verdict } = await generateText({
-      model: openai(GATE_MODEL),
+      model: anthropic(MODEL),
       system: GATE_SYSTEM,
       prompt: transcript,
       maxOutputTokens: 16,
@@ -138,9 +141,25 @@ export async function POST(req: Request) {
   }
 
   const result = streamText({
-    model: openai(CHAT_MODEL),
-    system: SYSTEM_PROMPT,
-    messages: await convertToModelMessages(recent),
+    model: anthropic(MODEL),
+    // The SDK warns about system messages in `messages` because a user-supplied
+    // one would be a prompt-injection hole. Layer 4 above strips those, so the
+    // only system turn that survives is our own constant.
+    allowSystemInMessages: true,
+    messages: [
+      // The system prompt goes in `messages` rather than the `system` option so
+      // it can carry a cache breakpoint: Anthropic only caches a prefix you mark.
+      // Everything after this block is per-request, so the breakpoint sits at
+      // the end of the only stable part.
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+        providerOptions: {
+          anthropic: { cacheControl: { type: "ephemeral" } },
+        },
+      },
+      ...(await convertToModelMessages(recent)),
+    ],
     // Keep answers short and costs bounded.
     maxOutputTokens: 600,
   });

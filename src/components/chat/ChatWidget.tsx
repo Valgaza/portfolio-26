@@ -13,7 +13,7 @@ import SiriOrb from "@/components/ui/SiriOrb";
  * with a streaming, grounded chat.
  *
  * The bot is grounded on the static system prompt in `@/lib/chat/knowledge`
- * via the `/api/chat` route. Until OPENAI_API_KEY is set the route returns a
+ * via the `/api/chat` route. Until ANTHROPIC_API_KEY is set the route returns a
  * 503 and we surface that as a friendly inline message.
  */
 
