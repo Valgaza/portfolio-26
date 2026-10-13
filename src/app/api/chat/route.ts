@@ -20,9 +20,16 @@ export const maxDuration = 30;
 //  - The CHAT call is the persona itself, where instruction-following and voice
 //    actually matter (the refusals, the no-partial-compliance rule, the
 //    Hinglish, the tone).
-// Haiku 4.5 handles both. Unlike OpenAI, Anthropic does not cache long prefixes
+// Haiku 5.5 handles both. Unlike OpenAI, Anthropic does not cache long prefixes
 // on its own — the system prompt is marked explicitly below.
-const MODEL = "claude-haiku-4-5-20251001";
+//
+// Haiku 5.5 thinks by default, and thinking tokens count against
+// maxOutputTokens — enough to eat the gate's 16-token budget whole and leave an
+// empty verdict (which fails open). Thinking is turned off on both calls: the
+// gate doesn't need it, and on the chat call replayed thinking blocks would be
+// invalidated by the MAX_MESSAGES sliding window (trimming = editing history).
+// `disabled` is only accepted at effort "high" or below.
+const MODEL = "claude-haiku-5-5";
 
 // Layer 4 — only ever send the last N messages to the model.
 const MAX_MESSAGES = 10;
@@ -132,6 +139,9 @@ export async function POST(req: Request) {
       system: GATE_SYSTEM,
       prompt: transcript,
       maxOutputTokens: 16,
+      providerOptions: {
+        anthropic: { thinking: { type: "disabled" }, effort: "low" },
+      },
     });
     if (/block/i.test(verdict) && !/allow/i.test(verdict)) {
       return refusalResponse();
@@ -160,8 +170,12 @@ export async function POST(req: Request) {
       },
       ...(await convertToModelMessages(recent)),
     ],
-    // Keep answers short and costs bounded.
-    maxOutputTokens: 600,
+    // Keep answers short and costs bounded. (Haiku 5.5's tokenizer runs ~30%
+    // more tokens for the same text, so this is the old 600 scaled up.)
+    maxOutputTokens: 800,
+    providerOptions: {
+      anthropic: { thinking: { type: "disabled" }, effort: "medium" },
+    },
   });
 
   return result.toUIMessageStreamResponse();
